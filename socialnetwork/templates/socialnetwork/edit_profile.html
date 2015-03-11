@@ -1,0 +1,142 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<div class="centered-content">
+
+<form class="form-horizontal" enctype="multipart/form-data" action="{% url 'edit_profile' %}" method="POST">
+  <h2 class="form-register-heading">Edit Profile</h2>
+  {% for field,errors in form.errors.items %}
+  {% if field != '__all__' %}
+
+  <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+        {{ field }}
+        {{ errors }}
+  </div>
+  
+  {% endif %}
+  {% endfor %}
+
+  {% for error in form.non_field_errors %}
+
+  <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+        {{ error }}
+  </div>
+  {% endfor %}
+
+    <div class="form-group">
+    <label class="col-sm-2 control-label">Username</label>
+    <div class="col-sm-10">
+    <p class="form-control-static">{{ user.username }}</p>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-10">
+    <p class="form-control-static">{{ user.email }}</p>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label for="{{ form.password1.id_for_label }}" class="col-sm-2 control-label">{{ form.password1.label }}</label>
+    <div class="col-sm-10">
+    <input type="password" 
+      id="{{ form.password1.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.password1.label }}" 
+      name="{{ form.password1.html_name }}" 
+      {% if form.password1.field.required %}required{% endif %}>
+    </div>
+    </div>  
+
+    <div class="form-group">
+    <label for="{{ form.password2.id_for_label }}" class="col-sm-2 control-label">{{ form.password2.label }}</label>
+    <div class="col-sm-10">
+    <input type="password" 
+      id="{{ form.password2.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.password2.label }}" 
+      name="{{ form.password2.html_name }}" 
+      {% if form.password2.field.required %}required{% endif %}>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label for="{{ form.first_name.id_for_label }}" class="col-sm-2 control-label">{{ form.first_name.label }}</label>
+    <div class="col-sm-10">
+    <input type="text" 
+      id="{{ form.first_name.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.first_name.label }}" 
+      {%if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %} 
+      name="{{ form.first_name.html_name }}" 
+      {% if form.first_name.field.required %}required{% endif %}>
+    </div>
+    </div> 
+
+    <div class="form-group">
+    <label for="{{ form.last_name.id_for_label }}" class="col-sm-2 control-label">{{ form.last_name.label }}</label>
+    <div class="col-sm-10">
+    <input type="text" 
+      id="{{ form.last_name.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.last_name.label }}" 
+      {%if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %} 
+      name="{{ form.last_name.html_name }}" 
+      {% if form.last_name.field.required %}required{% endif %}>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label for="{{ form.age.id_for_label }}" class="col-sm-2 control-label">{{ form.age.label }}</label>
+    <div class="col-sm-10">
+    <input type="text" 
+      id="{{ form.age.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.age.label }}" 
+      {%if form.age.value %}value="{{ form.age.value }}"{% endif %} 
+      name="{{ form.age.html_name }}" 
+      {% if form.age.field.required %}required{% endif %}>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label for="{{ form.bio.id_for_label }}" class="col-sm-2 control-label">{{ form.bio.label }}</label>
+    <div class="col-sm-10">
+    <textarea rows="4"
+      id="{{ form.bio.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.bio.label }}" 
+      name="{{ form.bio.html_name }}" 
+      {% if form.bio.field.required %}required{% endif %}>{%if form.bio.value %}{{ form.bio.value }}{% endif %}</textarea>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <label for="{{ form.picture.id_for_label }}" class="col-sm-2 control-label">{{ form.picture.label }}</label>
+    <div class="col-sm-10">
+    <input type="file" 
+      id="{{ form.picture.id_for_label }}" 
+      class="form-control-static" 
+      name="{{ form.picture.html_name }}" 
+      {% if form.picture.field.required %}required{% endif %}>
+    </div>
+    </div>
+
+    {% csrf_token %}
+
+
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <p class="help-block">Leave fields you do not wish to edit blank.</p>
+      <button type="submit" class="btn btn-default">Save</button>
+    </div>
+  </div>
+
+</form>
+</div>
+{% endblock %}

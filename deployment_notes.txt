@@ -1,0 +1,3 @@
+# Updating
+git subtree push --prefix hw7 heroku master
+

@@ -1,0 +1,48 @@
+{% extends "socialnetwork/stream_base.html" %}
+
+{% block stream_header %}
+{% for error in errors %}
+  <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+        {{ error }}
+  </div>
+{% endfor %}
+
+{% if profile_user %}
+<h1>{{profile_user.username}}</h1>
+<p>{{profile_user.first_name}} {{profile_user.last_name}}</p>
+<p>{{profile_user.email}}</p>
+
+{% if already_following %}
+<p><a href="{% url 'unfollow' profile_user.username %}" class="btn btn-default btn-md" >Unfollow</a></p>
+{% else %}
+<p><a href="{% url 'follow' profile_user.username %}" class="btn btn-default btn-md" >Follow</a></p>
+{% endif %}
+
+{% if profile_user.userprofile.picture_url%}
+<p><img class="img-thumbnail" src="{{profile_user.userprofile.picture_url}}" width="300px"></p>
+{% endif %}
+
+{% if profile_user.userprofile.age %}
+<p>Age: {{profile_user.userprofile.age}}</p>
+{% endif %}
+
+{% if profile_user.userprofile.bio %}
+<p>{{profile_user.userprofile.bio}}</p>
+{% endif %}
+
+{% if user.username == profile_user.username %}
+<p><a href="{% url 'edit_profile' %}" class="btn btn-default btn-sm" >Edit</a></p>
+{% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block nav_profile_active %}
+{% if profile_user.username == user.username %}
+class="active"
+{% endif %}
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<form class="form-register" action="{% url 'register' %}" method="POST">
+  <h2 class="form-register-heading">Register</h2>
+  {% for field,errors in form.errors.items %}
+  {% if field != '__all__' %}
+
+  <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+        {{ field }}
+        {{ errors }}
+  </div>
+  
+  {% endif %}
+  {% endfor %}
+
+  {% for error in form.non_field_errors %}
+
+  <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+        {{ error }}
+  </div>
+  {% endfor %}
+
+    
+    <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}:</label>
+    <input type="text" 
+      id="{{ form.username.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.username.label }}" 
+      {%if form.username.value %}value="{{ form.username.value }}"{% endif %} 
+      name="{{ form.username.html_name }}" 
+      {% if form.username.field.required %}required{% endif %} autofocus>
+
+    <label for="{{ form.password1.id_for_label }}" class="sr-only">{{ form.password1.label }}:</label>
+    <input type="password" 
+      id="{{ form.password1.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.password1.label }}" 
+      name="{{ form.password1.html_name }}" 
+      {% if form.password1.field.required %}required{% endif %}>  
+
+    <label for="{{ form.password2.id_for_label }}" class="sr-only">{{ form.password2.label }}:</label>
+    <input type="password" 
+      id="{{ form.password2.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.password2.label }}" 
+      name="{{ form.password2.html_name }}" 
+      {% if form.password2.field.required %}required{% endif %}>
+
+    <label for="{{ form.email.id_for_label }}" class="sr-only">{{ form.email.label }}:</label>
+    <input type="text" 
+      id="{{ form.email.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.email.label }}" 
+      {%if form.email.value %}value="{{ form.email.value }}"{% endif %} 
+      name="{{ form.email.html_name }}" 
+      {% if form.email.field.required %}required{% endif %}>  
+
+    <label for="{{ form.first_name.id_for_label }}" class="sr-only">{{ form.first_name.label }}:</label>
+    <input type="text" 
+      id="{{ form.first_name.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.first_name.label }}" 
+      {%if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %} 
+      name="{{ form.first_name.html_name }}" 
+      {% if form.first_name.field.required %}required{% endif %}>  
+
+    <label for="{{ form.last_name.id_for_label }}" class="sr-only">{{ form.last_name.label }}:</label>
+    <input type="text" 
+      id="{{ form.last_name.id_for_label }}" 
+      class="form-control" 
+      placeholder="{{ form.last_name.label }}" 
+      {%if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %} 
+      name="{{ form.last_name.html_name }}" 
+      {% if form.last_name.field.required %}required{% endif %}>
+
+    {% csrf_token %}
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+
+</form>
+{% endblock %}

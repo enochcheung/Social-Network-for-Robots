@@ -1,0 +1,42 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<div class="centered-content">
+
+
+{% block stream_header %}{% endblock %}
+<br>
+{% for post in posts %}
+<div class="panel panel-default">
+	<div class="panel-body">
+	<div class="media">
+		<div class="media-left">
+		<div class="profile-pic">
+		{% if post.user.userprofile.picture_url %}
+		<img class="media-object" src="{{ post.user.userprofile.picture_url }}" width="75px">
+		{% endif %}
+		</div>
+		</div>
+
+
+		<div class="media-body">
+		<div class="pad-left">
+		{{post.content}}
+
+		<div class="text-right">&mdash; <a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a> <small>({{post.date}})</small></div>
+		</div>
+		</div>
+
+		
+	</div>
+	</div>
+	
+</div>
+
+{% endfor %}
+
+
+
+</div>
+{% endblock %}
+

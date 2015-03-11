@@ -1,0 +1,6 @@
+{% if user.userprofile.picture_url %}
+{{ user.userprofile.picture_url }}
+{% else %}
+{% load staticfiles %}
+{% static "socialnetwork/images/default-profile-pic.png" %}
+{% endif %}

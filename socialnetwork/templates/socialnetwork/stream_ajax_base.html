@@ -1,0 +1,25 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<script>csrfstring = "{% csrf_token %}";</script>
+{% load staticfiles %}
+<script>defaultProfilePic = "{% static "socialnetwork/images/default-profile-pic.png" %}"</script>
+<script src="{% static "socialnetwork/js/moment.min.js" %}"></script>
+<script src="{% static "socialnetwork/js/posts.js" %}"></script>
+
+<div class="centered-content">
+
+
+{% block stream_header %}{% endblock %}
+
+
+<br>
+<ul class="media-list" id="posts-list">
+</ul>
+
+
+
+
+</div>
+{% endblock %}
+
