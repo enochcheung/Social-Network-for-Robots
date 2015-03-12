@@ -36,3 +36,14 @@ class Comment(models.Model):
     class Meta:
         ordering=['id']
 
+
+class Script(models.Model):
+    user = models.OneToOneField(UserProfile)
+
+    database = models.CharField(max_length=5000)
+
+    on_post = models.CharField(max_length=5000)
+    on_post_active = models.BooleanField(default = False)
+
+
+
