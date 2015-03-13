@@ -15,9 +15,10 @@ from django.core.mail import send_mail
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
-from socialnetwork.models import Post, UserProfile, Comment
-from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm
+from socialnetwork.models import Post, UserProfile, Comment, Script
+from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm
 from socialnetwork.s3 import s3_upload, s3_delete
+from socialnetwork.scripting import on_post
 
 
 @login_required
@@ -55,6 +56,9 @@ def register(request):
 
     new_user_profile = UserProfile(user=new_user)
     new_user_profile.save()
+
+    new_script = Script(userprofile=new_user_profile)
+    new_script.save()
 
      # Generate a one-time use token and an email message body
     token = default_token_generator.make_token(new_user)
@@ -116,6 +120,8 @@ def post(request):
 
     new_post = Post(content=form.cleaned_data['content'], user=request.user)
     new_post.save()
+
+    on_post(new_post)
 
     context['post_form'] = PostForm()
     context['posts'] = Post.objects.all()[::-1]
@@ -242,6 +248,21 @@ def profile_pic_url(request, username):
     context = {'user':user}
     return render(request, 'socialnetwork/profile_pic_url.txt',context)
 
+@login_required
+def scripts(request):
+    context={}
+    script = request.user.userprofile.script
+    form = ScriptForm(request.POST or None, instance = script)
+    context['form']=form
+
+    if request.method == 'GET':
+        return render(request, 'socialnetwork/scripts.html',context)
+    if not form.is_valid():
+        print "invalid form"
+        return render(request, 'socialnetwork/scripts.html',context)
+
+    form.save()
+    return render(request, 'socialnetwork/scripts.html',context)
 
 @login_required
 def follower_stream(request):

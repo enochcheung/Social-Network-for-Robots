@@ -1,7 +1,7 @@
 from django import forms
 
 from django.contrib.auth.models import User
-from models import UserProfile, Post, Comment
+from models import UserProfile, Post, Comment, Script
 from django.core.validators import validate_email
 
 MAX_UPLOAD_SIZE = 2500000
@@ -102,4 +102,9 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['post','content']
+
+class ScriptForm(forms.ModelForm):
+    class Meta:
+        model = Script
+        fields = ['code','on_post_active']
 

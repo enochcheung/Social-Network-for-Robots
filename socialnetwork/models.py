@@ -38,11 +38,14 @@ class Comment(models.Model):
 
 
 class Script(models.Model):
-    user = models.OneToOneField(UserProfile)
+    userprofile = models.OneToOneField(UserProfile)
 
+    # this can store dicts of strings
     database = models.CharField(max_length=5000)
 
-    on_post = models.CharField(max_length=5000)
+    code = models.CharField(max_length=5000)
+    
+
     on_post_active = models.BooleanField(default = False)
 
 

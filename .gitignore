@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 local_settings.py
+*.DS_Store
 
 # Editor backup files
 *~
@@ -17,8 +18,11 @@ db.sqlite3
 /pictures/*
 
 *.pem
+secrets.txt
+secrets.sh
 
 # virtualenv
 venv
 
 staticfiles
+
