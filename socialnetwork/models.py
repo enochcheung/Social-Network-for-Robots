@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from json_field import JSONField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -43,8 +43,9 @@ class Script(models.Model):
     # this can store dicts of strings
     database = models.CharField(max_length=5000)
 
-    code = models.CharField(max_length=5000)
+    code = models.CharField(max_length=5000, blank=True)
     
+    json = JSONField(default='{}', blank=True)
 
     on_post_active = models.BooleanField(default = False)
 

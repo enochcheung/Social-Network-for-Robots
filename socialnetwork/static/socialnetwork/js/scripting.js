@@ -1,18 +1,30 @@
 // Formatting the editor
 $(document).ready(function() {
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/chrome");
-    editor.getSession().setMode("ace/mode/javascript");
+    var code_editor = ace.edit("code-editor");
+    
+    code_editor.setTheme("ace/theme/chrome");
+    code_editor.getSession().setMode("ace/mode/javascript");
 
-    $('#script_code').val(editor.getValue());
+    $('#code-field').val(code_editor.getValue());
+
+
+    var json_editor = ace.edit("json-editor");
+
+    json_editor.setTheme("ace/theme/chrome");
+    json_editor.getSession().setMode("ace/mode/json");
+    $('#json-field').val(json_editor.getValue());
+
 
     $("#script-form").submit(submitScriptForm)
 
 });
 
 function submitScriptForm(e) {
-    var editor = ace.edit("editor");
-    $('#script_code').val(editor.getValue());
+    var code_editor = ace.edit("code-editor");
+    var json_editor = ace.edit("json-editor")
+
+    $('#code-field').val(code_editor.getValue());
+    $('#json-field').val(json_editor.getValue());
 
     var data = $(this).serializeArray();
     var formURL = $(this).attr("action");
@@ -21,8 +33,8 @@ function submitScriptForm(e) {
         type: "POST",
         data: data,
         success: function() {
-
+            // 
         }
     });
-    e.preventDefault();
+    // e.preventDefault();
 }

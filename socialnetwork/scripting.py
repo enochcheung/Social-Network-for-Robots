@@ -32,7 +32,7 @@ def run_script_post(post, user):
 	post_info['id'] = post.id
 
 	context['post'] = post_info
-	context['database'] = script.database		# TODO: should read/write lock
+	context['data'] = script.json		# TODO: should read/write lock
 
 	code = script.code
 
@@ -44,7 +44,6 @@ def run_script_post(post, user):
 
 
 def run_script(code, func_name, func_input) :
-	#sandboxcode = open('sandbox.js','r').read()
 	sandboxcode = """
 	'use strict';
 	var vm = require('vm');
@@ -81,19 +80,24 @@ def run_script(code, func_name, func_input) :
 		print traceback.format_exc()
 		return {'error': 'Unknown error'}
 
+	print response
 	return response
 
-
+@transaction.atomic
 def run_response(response,user):
 	# TODO: validate format of response
 
 	if 'error' in response:
 		print response
 
-	if 'database' in response:
-		new_database = response['database']
-		script.database = new_database
-		script.save()
+	if 'data' in response:
+		try:
+			new_json = response['data']
+			script = user.userprofile.script
+			script.json = new_json
+			script.save()
+		except:
+			print traceback.format_exc()
 
 	if 'posts' in response:
 		for post_info in response['posts']:
@@ -103,13 +107,27 @@ def run_response(response,user):
 
 			post_form = PostForm({'content':content})
 			if not post_form.is_valid():
-				print "invalid response "+ str(response)
+				print "invalid post "+ str(post_info)
 				return
 
 			new_post = Post(content=post_form.cleaned_data['content'], user=user)
+			new_post.save()
+	
+	if 'comments' in response:
+		for comment_info in response['comments']:
+			# TODO: check formatting
 
-    		new_post.save()
+			post_id = comment_info['post_id']
+			content = comment_info['content']
+			comment_form = CommentForm({'post':post_id,'content':content})
+			if not comment_form.is_valid():
+				print "invalid response "+ str(comment_info)
+				return
 
+			new_comment = Comment(content=comment_form.cleaned_data['content'],
+									post=comment_form.cleaned_data['post'],
+									user=user)
+			new_comment.save()
 
 
 

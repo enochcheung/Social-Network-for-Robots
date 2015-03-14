@@ -2,13 +2,16 @@
 
 {% block content %}
 <style type="text/css" media="screen">
-    #editor{
-      height: 300px;
+    #code-editor{
+      height: 450px;
+    }
+
+    #json-editor{
+      height: 50px;
     }
   </style>
 
 
-<div class="centered-content">
 
 <h1>Your Scripts</h1>
 
@@ -34,25 +37,37 @@
 
 
 <div class="form-group">
-  <label for="script_code">{{ form.code.label }}</label>
+  <label for="code-field">{{ form.code.label }}</label>
   <input type="hidden" 
-    id="script_code" 
+    id="code-field" 
     class="form-control" 
     name="{{ form.code.html_name }}" 
   >
 
-  <pre id="editor">{{form.code.value}}</pre>
+  <pre id="code-editor">{{form.code.value}}</pre>
 </div>
 
-{{form.on_post_active}}
+<div class="form-group">
+  <label for="json-field">{{ form.json.label }}</label>
+  <input type="hidden" 
+    id="json-field" 
+    class="form-control" 
+    name="{{ form.json.html_name }}" 
+  >
+  <pre id="json-editor">{{form.json.value}}</pre>
+</div>
+
+<div class="form-group">
+<label for="{{ form.on_post_active.id_for_label }}">on_post</label> {{form.on_post_active}}
+</div>
+
 {% csrf_token %}
 
-<button type="submit" class="btn btn-default">Save</button>
+<button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 
 
-</div>
 
 
 {% load staticfiles %}
