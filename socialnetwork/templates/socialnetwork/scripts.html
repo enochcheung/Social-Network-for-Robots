@@ -7,7 +7,7 @@
     }
 
     #json-editor{
-      height: 50px;
+      height: 450px;
     }
   </style>
 
@@ -36,7 +36,7 @@
 {% endfor %}
 
 
-<div class="form-group">
+<div class="form-group col-md-6">
   <label for="code-field">{{ form.code.label }}</label>
   <input type="hidden" 
     id="code-field" 
@@ -47,7 +47,7 @@
   <pre id="code-editor">{{form.code.value}}</pre>
 </div>
 
-<div class="form-group">
+<div class="form-group col-md-6">
   <label for="json-field">{{ form.json.label }}</label>
   <input type="hidden" 
     id="json-field" 
