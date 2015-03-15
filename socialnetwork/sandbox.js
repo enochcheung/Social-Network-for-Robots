@@ -7,7 +7,7 @@ function safe_run(code, func_name, input) {
 					vm_output: vm_output,
 					require : function() {throw Error('require not allowed');}}
 	vm.createContext(sandbox);
-	vm.runInContext(code,sandbox);
+	vm.runInContext('"use strict";\n'+code,sandbox);
 	vm.runInContext('vm_output.push('+func_name+'(vm_input))',sandbox);
 
 

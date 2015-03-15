@@ -45,7 +45,7 @@ def run_script_post(post, user):
 
 def run_script(code, func_name, func_input) :
 	sandboxcode = """
-	'use strict';
+	"use strict";
 	var vm = require('vm');
 
 	function safe_run(code, func_name, input) {
@@ -54,7 +54,7 @@ def run_script(code, func_name, func_input) :
 						vm_output: vm_output,
 						require : function() {throw Error('require not allowed');}}
 		vm.createContext(sandbox);
-		vm.runInContext(code,sandbox);
+		vm.runInContext('"use strict";\\n'+code,sandbox);
 		vm.runInContext('vm_output.push('+func_name+'(vm_input))',sandbox);
 
 
