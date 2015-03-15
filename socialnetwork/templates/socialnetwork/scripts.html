@@ -13,7 +13,7 @@
 
 
 
-<h1>Your Scripts</h1>
+<h1>Scripts</h1>
 
 <form action="{% url 'scripts' %}" id="script-form" method="POST">
 {% for field,errors in form.errors.items %}
@@ -75,3 +75,5 @@
 <script src="{% static "socialnetwork/js/scripting.js" %}"></script>
 
 {% endblock %}
+
+{% block nav_scripts_active %}class="active"{% endblock %}

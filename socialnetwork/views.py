@@ -265,6 +265,12 @@ def scripts(request):
     return render(request, 'socialnetwork/scripts.html',context)
 
 @login_required
+def logs(request):
+    context={}
+    return render(request, 'socialnetwork/logs.html',context)
+
+
+@login_required
 def follower_stream(request):
     context = {}
     following = request.user.userprofile.following.all()

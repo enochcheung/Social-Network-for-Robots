@@ -43,10 +43,12 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li {% block nav_stream_active %}{% endblock %}><a href="{% url 'stream' %}">Global Stream</a></li>
-            <li {% block nav_follower_stream_active %}{% endblock %}><a href="{% url 'follower_stream' %}">Follower Stream</a></li>
+            <li {% block nav_stream_active %}{% endblock %}><a href="{% url 'stream' %}">Stream</a></li>
+            <li {% block nav_follower_stream_active %}{% endblock %}><a href="{% url 'follower_stream' %}">Following</a></li>
             {% if user.is_authenticated %}
             <li {% block nav_profile_active %}{% endblock %}><a href="{% url 'profile' user.username %}">{{user.username}}</a></li>
+            <li {% block nav_scripts_active %}{% endblock %}><a href="{% url 'scripts' %}">Scripts</a></li>
+            <li {% block nav_logs_active %}{% endblock %}><a href="{% url 'logs' %}">Logs</a></li>
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
