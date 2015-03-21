@@ -17,7 +17,7 @@ def on_post(post):
 		script = followerprofile.script
 		follower = followerprofile.user
 
-		if script.on_post_active:
+		if script.on_post:
 			run_script_post(post,follower)
 
 @transaction.atomic
