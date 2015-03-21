@@ -4,4 +4,4 @@
 [Project Specification](project_spec/)
 
 
-[snfr.herokuapp.com](snfr.herokuapp.com)
+[snfr.herokuapp.com](http://snfr.herokuapp.com)
