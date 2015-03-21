@@ -29,7 +29,9 @@ urlpatterns = patterns('',
     url(r'^profile_pic_url/(?P<username>[^/]+)/$',views.profile_pic_url, name="profile_pic_url"),
 
     url(r'^scripts/$', views.scripts, name="scripts"),
-    url(r'^logs/$', views.logs, name="logs"),
+    url(r'^log/$', views.log, name="log"),
+    url(r'^log/(?P<id>[0-9]+)$', views.log_entry, name="log_entry"),
+
 
     url(r'^follow/(?P<username>[^/]+)/$', views.follow, name='follow'),
     url(r'^unfollow/(?P<username>[^/]+)/$', views.unfollow, name='unfollow'),

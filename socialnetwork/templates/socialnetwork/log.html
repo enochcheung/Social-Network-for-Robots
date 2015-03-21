@@ -1,0 +1,12 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<h1>Log</h1>
+<ul class="list-unstyled">
+{% for log_entry in log%}
+<li><a href="{% url 'log_entry' log_entry.id %}">[{{log_entry.date}}] {{log_entry.content|truncatechars:140}}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+{% block nav_log_active %}class="active"{% endblock %}

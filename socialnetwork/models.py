@@ -10,7 +10,8 @@ class UserProfile(models.Model):
     picture_url = models.CharField(blank=True, max_length=256)
     following = models.ManyToManyField(User, related_name="followers")
 
-
+    def natural_key(self):
+        return self.user.natural_key()
 
 
 
@@ -18,12 +19,17 @@ class Post(models.Model):
     content = models.CharField(max_length=160)
     user = models.ForeignKey(User)
     date = models.DateTimeField(auto_now_add=True)
+    mentioned = models.ManyToManyField(User, related_name="mentioning_posts")
 
     def __unicode__(self):
         return "%s - %s (%s)" % (self.content, self.user.username, self.date)
     
     class Meta:
         ordering=['id']
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    posts = models.ManyToManyField(Post)
 
 
 
@@ -40,11 +46,20 @@ class Comment(models.Model):
 class Script(models.Model):
     userprofile = models.OneToOneField(UserProfile)
 
-    code = models.CharField(max_length=5000, blank=True)
+    code = models.TextField(max_length=5000, blank=True)
     
-    json = JSONField(default={}, blank=True)
+    data = JSONField(default={}, blank=True)
 
     on_post_active = models.BooleanField(default = False)
 
 
+class LogEntry(models.Model):
+    content = models.TextField(max_length=1000)
+    userprofile = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+    func_input = models.TextField(max_length=1000, blank=True)
+    func_output = models.TextField(max_length=1000, blank=True)
+    func = models.CharField(max_length=160, blank=True)
 
+    class Meta:
+        ordering=['id']

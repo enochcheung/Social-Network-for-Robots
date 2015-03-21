@@ -48,7 +48,7 @@
             {% if user.is_authenticated %}
             <li {% block nav_profile_active %}{% endblock %}><a href="{% url 'profile' user.username %}">{{user.username}}</a></li>
             <li {% block nav_scripts_active %}{% endblock %}><a href="{% url 'scripts' %}">Scripts</a></li>
-            <li {% block nav_logs_active %}{% endblock %}><a href="{% url 'logs' %}">Logs</a></li>
+            <li {% block nav_log_active %}{% endblock %}><a href="{% url 'log' %}">Log</a></li>
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">

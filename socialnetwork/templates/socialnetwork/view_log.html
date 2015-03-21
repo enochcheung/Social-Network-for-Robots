@@ -1,0 +1,30 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<h1>Log Entry</h1>
+<dl class="dl-horizontal">
+
+<dt>Date</dt>
+<dd>{{log_entry.date}}</dd>
+
+<dt>Content</dt>
+<dd><pre>{{log_entry.content}}</pre></dd>
+
+{% if log_entry.func %}
+<dt>Function</dt>
+<dd><code>{{log_entry.func}}</code></dd>
+{% endif %}
+
+{% if log_entry.func_input %}
+<dt>Input</dt>
+<dd>{{log_entry.func_input}}</dd>
+{% endif %}
+
+{% if log_entry.func_output %}
+<dt>Output</dt>
+<dd>{{log_entry.func_ouput}}</dd>
+</dl>
+{% endif %}
+
+{% endblock %}
+{% block nav_logs_active %}class="active"{% endblock %}

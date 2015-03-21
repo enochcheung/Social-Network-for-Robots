@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
-from socialnetwork.models import Post, UserProfile, Comment, Script
+from socialnetwork.models import Post, UserProfile, Comment, Script, LogEntry, Tag
 from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm
 from socialnetwork.s3 import s3_upload, s3_delete
 from socialnetwork.scripting import on_post
@@ -265,10 +265,24 @@ def scripts(request):
     return render(request, 'socialnetwork/scripts.html',context)
 
 @login_required
-def logs(request):
+def log(request):
     context={}
-    return render(request, 'socialnetwork/logs.html',context)
+    context['log'] = request.user.userprofile.logentry_set.all()[::-1]
 
+    return render(request, 'socialnetwork/log.html',context)
+
+@login_required
+def log_entry(request,id):
+    context={}
+    log_entry = get_object_or_404(LogEntry, id=id)
+    if (not log_entry.userprofile.user == request.user):
+        return Http404
+    
+    context['log_entry']=log_entry
+    # response_text = serializers.serialize('json',[log_entry],use_natural_foreign_keys=True)
+    # return HttpResponse(response_text, content_type='application/json')
+
+    return render(request, 'socialnetwork/view_log.html',context)
 
 @login_required
 def follower_stream(request):

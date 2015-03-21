@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from models import UserProfile, Post, Comment, Script
+from models import UserProfile, Post, Comment, Script, LogEntry, Tag
 from forms import PostForm, CommentForm
 
 import execjs
@@ -32,18 +32,18 @@ def run_script_post(post, user):
 	post_info['id'] = post.id
 
 	context['post'] = post_info
-	context['data'] = script.json		# TODO: should read/write lock
+	context['data'] = script.data		# TODO: should read/write lock
 
 	code = script.code
 
 
-	response = run_script(code,'on_post',context)
+	response = run_script(code,'on_post',context, user)
 
-	run_response(response,user)
+	handle_response(response,user)
 	
 
 
-def run_script(code, func_name, func_input) :
+def run_script(code, func_name, func_input, user) :
 	sandboxcode = """
 	"use strict";
 	var vm = require('vm');
@@ -75,16 +75,27 @@ def run_script(code, func_name, func_input) :
 	# 	return {'error':str(e)}
 	except execjs.Error as e:
 		print str(e)
+		log_error(str(e),func_name,func_input, user)
 		return {'error':str(e)}
 	except:
 		print traceback.format_exc()
+		log_error('Error: Unknown Error',func_name,func_input, user)
 		return {'error': 'Unknown error'}
 
 	print response
 	return response
 
 @transaction.atomic
-def run_response(response,user):
+def log_error(message, func, func_input, user):
+	log_entry = LogEntry(content=message, 
+				userprofile = user.userprofile,
+				func = func,
+				func_input = func_input
+				)
+	log_entry.save()
+
+@transaction.atomic
+def handle_response(response,user):
 	# TODO: validate format of response
 
 	if 'error' in response:
@@ -92,9 +103,9 @@ def run_response(response,user):
 
 	if 'data' in response:
 		try:
-			new_json = response['data']
+			new_data = response['data']
 			script = user.userprofile.script
-			script.json = new_json
+			script.data = new_data
 			script.save()
 		except:
 			print traceback.format_exc()
