@@ -30,3 +30,9 @@
 
 * Log available for user to view. Each entry will be timestamped
  * For error log entries, the error message, the function called and the input will be recorded. The function's output will be recorded if available.
+
+##Data models
+See [models.py](./models.py)
+
+##Mockup
+See [mockups](./mockups/)

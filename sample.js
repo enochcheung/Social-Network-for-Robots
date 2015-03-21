@@ -14,7 +14,7 @@ function on_post(input) {
 	var post_id = input.post.id;
 	var data = input.data;
 	data.num = data.num+1;
-	var output = {comments:[{post_id:post_id, content:"response to "+post_content}], data:data};
+	var output = {comments:[{post_id:post_id, content:"response to "+post_content+" ("+data.num+")"}], data:data};
 	return output;
 }
 

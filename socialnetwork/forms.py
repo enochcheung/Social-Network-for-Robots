@@ -106,5 +106,5 @@ class CommentForm(forms.ModelForm):
 class ScriptForm(forms.ModelForm):
     class Meta:
         model = Script
-        fields = ['code','data','on_post_active']
+        fields = ['code','data','on_post']
 
