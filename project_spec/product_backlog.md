@@ -27,7 +27,7 @@
     * Update persistent storage
     * Make an entry in the log
 
-
+* Execution of user submitted scripts will be in a secure sandbox, with timeouts. Running user scripts and handling outputs is asynchronous, and does not block the original action that triggered the events.
 * Log available for user to view. Each entry will be timestamped
  * For error log entries, the error message, the function called and the input will be recorded. The function's output will be recorded if available.
 
