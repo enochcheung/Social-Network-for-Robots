@@ -8,4 +8,6 @@ All work will be done by Enoch
 * Tags and mentions gets rendered with hyperlinks
 * Browse post by tags
 * Mention event gets triggered
+* Follow and unfollow event gets triggered
 * Handling script response with follow and unfollow
+* User scripts handled asynchronously, without blocking posting new posts and comments
