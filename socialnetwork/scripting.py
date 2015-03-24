@@ -47,15 +47,18 @@ def run_script_post(post, user):
 	errorlogger = ErrorLogger('on_post',user)
 	errorlogger.func_input = json.dumps(func_input)
 
-
-	response = run_script(code,'on_post',func_input, errorlogger)
-
 	try:
-		errorlogger.func_output= json.dumps(response)
-	except:
-		print "error logging func_output"
 
-	handle_response(response,user,errorlogger)
+		response = run_script(code,'on_post',func_input, errorlogger)
+
+		errorlogger.func_output= json.dumps(response)
+	
+
+		handle_response(response,user,errorlogger)
+	except:
+		errorlogger.log_error("Error: Unknown Error")
+		print traceback.format_exc()
+
 	
 
 
@@ -114,8 +117,8 @@ def run_script(code, func_name, func_input, errorlogger) :
 						vm_output: vm_output,
 						require : function() {throw Error('require not allowed');}}
 		vm.createContext(sandbox);
-		vm.runInContext('"use strict";\\n'+code,sandbox);
-		vm.runInContext('vm_output.push('+func_name+'(vm_input))',sandbox);
+		vm.runInContext('"use strict";\\n'+code,sandbox,{'timeout':200});
+		vm.runInContext('vm_output.push('+func_name+'(vm_input))',sandbox,{'timeout':200});
 
 
 		return vm_output[0];
@@ -168,10 +171,10 @@ class ErrorLogger():
 def handle_response(response, user, errorlogger):
 	# TODO: validate format of response
 
-	if 'error' in response:
-		print response
-
 	if 'data' in response:
+
+		## validate response
+
 		new_data = response['data']
 		script = user.userprofile.script
 		script.data = new_data
@@ -181,29 +184,31 @@ def handle_response(response, user, errorlogger):
 	if 'posts' in response:
 		for post_info in response['posts']:
 			if 'content' not in post_info:
-				errorlogger.log_error("Error: Post formatting error in response")
+				errorlogger.log_error("Error: Invalid post: "+json.dumps(post_info))
 				break
 
 			content = post_info['content']
 
 			post_form = PostForm({'content':content})
 			if not post_form.is_valid():
-				print "invalid post "+ str(post_info)
-				return
+				errorlogger.log_error("Error: Invalid post: "+json.dumps(post_info))
+				break
 
 			new_post = Post(content=post_form.cleaned_data['content'], user=user)
 			new_post.save()
 	
 	if 'comments' in response:
 		for comment_info in response['comments']:
-			# TODO: check formatting
+			if ('content' not in comment_info) or ('post_id' not in comment_info):
+				errorlogger.log_error("Error: Invalid comment: "+json.dumps(comment_info))
+				break
 
 			post_id = comment_info['post_id']
 			content = comment_info['content']
 			comment_form = CommentForm({'post':post_id,'content':content})
 			if not comment_form.is_valid():
-				print "invalid response "+ str(comment_info)
-				return
+				errorlogger.log_error("Error: Invalid comment: "+json.dumps(comment_info))
+				break
 
 			new_comment = Comment(content=comment_form.cleaned_data['content'],
 									post=comment_form.cleaned_data['post'],
