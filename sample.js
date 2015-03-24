@@ -19,5 +19,17 @@ function on_post(input) {
 }
 
 
+function on_comment(input) {
+    var comment = input.comment;
+    var post = input.comment.parent_post;
+    
+    var new_comment = {"post_id":post.id,
+                        "content":"responding to comment "+input.comment.content};
+    
+    var output = {"comments":[new_comment]};
+    
+    return output;
+}
+
 
 {"num":0}

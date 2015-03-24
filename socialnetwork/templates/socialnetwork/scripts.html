@@ -58,7 +58,13 @@
 </div>
 
 <div class="form-group">
-<label for="{{ form.on_post.id_for_label }}">on_post</label> {{form.on_post}}
+
+<label class="checkbox-inline">
+   {{form.on_post}} on_post
+</label> 
+<label class="checkbox-inline">
+   {{form.on_comment}} on_comment
+</label> 
 </div>
 
 {% csrf_token %}

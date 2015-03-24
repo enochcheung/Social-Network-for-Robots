@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 from socialnetwork.models import Post, UserProfile, Comment, Script, LogEntry, Tag
 from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm
 from socialnetwork.s3 import s3_upload, s3_delete
-from socialnetwork.scripting import on_post
+from socialnetwork.scripting import on_post, on_comment
 
 
 @login_required
@@ -141,6 +141,8 @@ def comment(request):
 
     new_comment = Comment(content=form.cleaned_data['content'], user=request.user, post=form.cleaned_data['post'])
     new_comment.save()
+
+    on_comment(new_comment)
 
     return redirect(reverse('stream'))
 

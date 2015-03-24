@@ -5,6 +5,7 @@ from forms import PostForm, CommentForm
 
 import execjs
 import traceback
+import json
 
 
 
@@ -20,30 +21,89 @@ def on_post(post):
 		if script.on_post:
 			run_script_post(post,follower)
 
+def on_comment(comment):
+	parent_post_poster = comment.post.user
+
+	script = comment.post.user.userprofile.script
+
+	if script.on_comment:
+		run_script_comment(comment,parent_post_poster)
+
+
+
+
 @transaction.atomic
 def run_script_post(post, user):
 	script = user.userprofile.script
 
-	context = {}
+	func_input = {}
+	
+
+	func_input['post'] = serialize_post(post)
+	func_input['data'] = script.data		# TODO: should select_for_update lock
+
+	code = script.code
+
+	errorlogger = ErrorLogger('on_post',user)
+	errorlogger.func_input = json.dumps(func_input)
+
+
+	response = run_script(code,'on_post',func_input, errorlogger)
+
+	try:
+		errorlogger.func_output= json.dumps(response)
+	except:
+		print "error logging func_output"
+
+	handle_response(response,user,errorlogger)
+	
+
+
+@transaction.atomic
+def run_script_comment(comment,user):
+	script = user.userprofile.script
+	func_input={}
+	func_input['comment']=serialize_comment(comment)
+	func_input['data']=script.data
+	code = script.code
+
+	errorlogger = ErrorLogger('on_comment',user)
+	errorlogger.func_input = json.dumps(func_input)
+
+	response = run_script(code,'on_comment',func_input,errorlogger)
+
+	try:
+		errorlogger.func_output= json.dumps(response)
+	except:
+		print "error logging func_output"
+
+	handle_response(response,user,errorlogger)
+
+
+def serialize_post(post):
 	post_info = {}
 	post_info['content'] = post.content
 	post_info['user'] = post.user.username
 	post_info['date'] = str(post.date)
 	post_info['id'] = post.id
 
-	context['post'] = post_info
-	context['data'] = script.data		# TODO: should read/write lock
+	return post_info
 
-	code = script.code
+def serialize_comment(comment):
+	comment_info = {}
+	comment_info['content'] = comment.content
+	comment_info['user'] = comment.user.username
+	comment_info['date'] = str(comment.date)
+	comment_info['id'] = comment.id
+	comment_info['parent_post'] = serialize_post(comment.post)
+
+	return comment_info
 
 
-	response = run_script(code,'on_post',context, user)
-
-	handle_response(response,user)
-	
 
 
-def run_script(code, func_name, func_input, user) :
+
+def run_script(code, func_name, func_input, errorlogger) :
 	sandboxcode = """
 	"use strict";
 	var vm = require('vm');
@@ -75,44 +135,54 @@ def run_script(code, func_name, func_input, user) :
 	# 	return {'error':str(e)}
 	except execjs.Error as e:
 		print str(e)
-		log_error(str(e),func_name,func_input, user)
-		return {'error':str(e)}
+		errorlogger.log_error(str(e))
+		return {}
 	except:
 		print traceback.format_exc()
-		log_error('Error: Unknown Error',func_name,func_input, user)
-		return {'error': 'Unknown error'}
+		errorlogger.log_error('Error: Unknown Error')
+		return {}
 
 	print response
 	return response
 
-@transaction.atomic
-def log_error(message, func, func_input, user):
-	log_entry = LogEntry(content=message, 
-				userprofile = user.userprofile,
-				func = func,
-				func_input = func_input
-				)
-	log_entry.save()
+
+class ErrorLogger():
+	def __init__(self, func, user, func_input=None, func_output=None):
+		self.func = func
+		self.user = user
+		self.func_input = func_input
+		self.func_output = func_output
+
+
+	@transaction.atomic
+	def log_error(self,message):
+		log_entry = LogEntry(content = message, userprofile = self.user.userprofile, func=self.func)
+		if self.func_input:
+			log_entry.func_input = self.func_input
+		if self.func_output:
+			log_entry.func_output = self.func_output
+
+		log_entry.save()
 
 @transaction.atomic
-def handle_response(response,user):
+def handle_response(response, user, errorlogger):
 	# TODO: validate format of response
 
 	if 'error' in response:
 		print response
 
 	if 'data' in response:
-		try:
-			new_data = response['data']
-			script = user.userprofile.script
-			script.data = new_data
-			script.save()
-		except:
-			print traceback.format_exc()
+		new_data = response['data']
+		script = user.userprofile.script
+		script.data = new_data
+		script.save()
+
 
 	if 'posts' in response:
 		for post_info in response['posts']:
-			# TODO: check formatting
+			if 'content' not in post_info:
+				errorlogger.log_error("Error: Post formatting error in response")
+				break
 
 			content = post_info['content']
 
