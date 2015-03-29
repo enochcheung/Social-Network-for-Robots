@@ -147,20 +147,32 @@ def comment(request):
     return redirect(reverse('stream'))
 
 
+# @login_required
+# def get_posts(request,start_id=0):
+#     posts = Post.objects.filter(id__gte=start_id)
+
+#     response_text = serializers.serialize('json', posts, use_natural_foreign_keys=True)
+#     return HttpResponse(response_text,content_type="application/json")
+
+
 @login_required
 def get_posts(request,start_id=0):
     posts = Post.objects.filter(id__gte=start_id)
+    context = {'posts':posts}
 
-    response_text = serializers.serialize('json', posts, use_natural_foreign_keys=True)
-    return HttpResponse(response_text,content_type="application/json")
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
+
+
 
 @login_required
 def get_comments(request,post_id,start_id=0):
     post = get_object_or_404(Post, id=post_id)
     comments = post.comment_set.filter(id__gte=start_id)
 
-    response_text = serializers.serialize('json', comments, use_natural_foreign_keys=True)
-    return HttpResponse(response_text,content_type="application/json")
+    context = {'comments':comments}
+
+    return render(request, 'socialnetwork/get_comments.json', context, content_type="application/json")
 
 
 @login_required

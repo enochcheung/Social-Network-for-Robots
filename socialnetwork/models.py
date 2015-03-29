@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from jsonfield import JSONField
+import re
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -24,6 +25,31 @@ class Post(models.Model):
     def __unicode__(self):
         return "%s - %s (%s)" % (self.content, self.user.username, self.date)
     
+    def save(self, *args, **kwargs):
+        super(Post,self).save(*args,**kwargs)
+
+        tag_strings = set(re.findall(r'#(\w+)',self.content))
+        mention_strings = set(re.findall(r'@(\w+)',self.content))
+
+        for tag_string in tag_strings:
+            try:
+                tag = Tag.objects.get(name=tag_string)
+            except Tag.DoesNotExist:
+                tag = Tag(name=tag_string)
+                tag.save()
+
+            self.tag_set.add(tag)
+
+        for username in mention_strings:
+            try:
+                user = User.objects.get(username=username)
+                self.mentioned.add(user)
+            except User.DoesNotExist:
+                pass
+
+        super(Post,self).save()
+
+
     class Meta:
         ordering=['id']
 

@@ -1,0 +1,11 @@
+{% load tags %}
+[{%for post in posts %}
+	{
+		"fields": {
+			"content" : "{% autoescape off %}{{post.content|force_escape|link_tags|escapejs}}{% endautoescape %}",
+			"date" : "{{post.date|date:'c'}}",
+			"user": "{{post.user.username}}"
+		},
+		"pk":{{post.id}}
+	}{%if not forloop.last%},{% endif %}{% endfor %}
+]

@@ -1,0 +1,11 @@
+[{%for comment in comments %}
+	{
+		"fields": {
+			"content" : "{{comment.content|force_escape|escapejs}}",
+			"date" : "{{comment.date|date:'c'}}",
+			"user": "{{comment.user.username}}",
+			"post": {{comment.post.id}}
+		},
+		"pk":{{comment.id}}
+	}{%if not forloop.last%},{% endif %}{% endfor %}
+]
