@@ -1,7 +1,7 @@
 from django.db import transaction
 
-from models import UserProfile, Post, Comment, Script, LogEntry, Tag
-from forms import PostForm, CommentForm
+from socialnetwork.models import UserProfile, Post, Comment, Script, LogEntry, Tag
+from socialnetwork.forms import PostForm, CommentForm
 
 import execjs
 import traceback
