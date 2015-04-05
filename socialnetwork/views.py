@@ -147,13 +147,6 @@ def comment(request):
     return redirect(reverse('stream'))
 
 
-# @login_required
-# def get_posts(request,start_id=0):
-#     posts = Post.objects.filter(id__gte=start_id)
-
-#     response_text = serializers.serialize('json', posts, use_natural_foreign_keys=True)
-#     return HttpResponse(response_text,content_type="application/json")
-
 
 @login_required
 def get_posts(request,start_id=0):
@@ -261,6 +254,15 @@ def profile_pic_url(request, username):
     user = get_object_or_404(User, username=username)
     context = {'user':user}
     return render(request, 'socialnetwork/profile_pic_url.txt',context)
+
+@login_required
+def tag(request, tag_name):
+
+    tag = get_object_or_404(Tag, name=tag_name)
+
+    context = {"tag":tag}
+
+    return render(request, 'socialnetwork/tag.html', context)
 
 @login_required
 def scripts(request):

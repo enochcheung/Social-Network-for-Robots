@@ -8,15 +8,25 @@ from django.template.defaultfilters import stringfilter
 import re
 
 register = template.Library()
+
 	
 @register.filter
 @stringfilter
 def link_tags(value):
-	return re.sub(r'@(\w+)', profile_link, value)
+	value = re.sub(r'@(\w+)', profile_link, value)
+	value = re.sub(r'#(\w+)', tag_link, value)
+
+	return value
 
 
 def profile_link(match):
 	tag = match.group()
 	url = reverse('profile',args=[match.group(1)])
+
+	return '<a href="%s">%s</a>' % (url,tag)
+
+def tag_link(match):
+	tag = match.group()
+	url = reverse('tag',args=[match.group(1)])
 
 	return '<a href="%s">%s</a>' % (url,tag)

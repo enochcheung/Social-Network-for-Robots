@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^edit_profile/$',views.edit_profile, name="edit_profile"),
     url(r'^profile_pic_url/(?P<username>[^/]+)/$',views.profile_pic_url, name="profile_pic_url"),
 
+    url(r'^tag/(?P<tag_name>[^/]+)/$', views.tag, name='tag'),
+
     url(r'^scripts/$', views.scripts, name="scripts"),
     url(r'^log/$', views.log, name="log"),
     url(r'^log/(?P<id>[0-9]+)$', views.log_entry, name="log_entry"),
