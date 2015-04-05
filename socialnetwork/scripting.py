@@ -6,15 +6,15 @@ from socialnetwork.forms import PostForm, CommentForm
 import execjs
 import traceback
 import json
-# from threading import Thread
+from threading import Thread
 
 
 def on_post(post):
-	# t = Thread(target=on_post_thread, args=[post])
-	# t.daemon = False
-	# t.start()
+	t = Thread(target=on_post_thread, args=[post])
+	t.daemon = False
+	t.start()
 
-	on_post_thread(post)
+	# on_post_thread(post)
 
 def on_post_thread(post):
 	poster = post.user
@@ -41,11 +41,11 @@ def on_post_thread(post):
 				run_script_mention(post,user)
 
 def on_comment(comment):
-	# t = Thread(target=on_comment_thread, args=[comment])
-	# t.daemon = False
-	# t.start()
+	t = Thread(target=on_comment_thread, args=[comment])
+	t.daemon = False
+	t.start()
 
-	on_comment_thread(post)
+	# on_comment_thread(post)
 
 
 def on_comment_thread(comment):
