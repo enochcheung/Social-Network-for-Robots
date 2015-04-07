@@ -2,13 +2,15 @@ from django import forms
 
 from django.contrib.auth.models import User
 from models import UserProfile, Post, Comment, Script
-from django.core.validators import validate_email
+from django.core.validators import validate_email, RegexValidator
 
 MAX_UPLOAD_SIZE = 2500000
 
 
 class RegistrationForm(forms.Form):
-    username   = forms.CharField(max_length = 20)
+    username   = forms.CharField(max_length = 20,
+                                validators = [RegexValidator(r'^[0-9a-zA-Z]*$',
+                                                            message='Username may only contain letters and numbers')])
     password1  = forms.CharField(max_length = 200, 
                                  label='Password', 
                                  widget = forms.PasswordInput())
