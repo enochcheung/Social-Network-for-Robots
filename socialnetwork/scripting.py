@@ -1,14 +1,15 @@
 from django.db import transaction
 
+from django.contrib.auth.models import User
 from socialnetwork.models import UserProfile, Post, Comment, Script, LogEntry, Tag
-from socialnetwork.forms import PostForm, CommentForm
+from socialnetwork.forms import PostForm, CommentForm, FollowForm
 
 import execjs
 import traceback
 import json
 from threading import Thread
 
-MULTITHREAD = True
+MULTITHREAD = False
 
 def on_post(post):
 	if MULTITHREAD:
@@ -35,7 +36,7 @@ def on_follow(follower,followee):
 		t.start()
 
 	else:
-		on_thread_thread(follower,followee)
+		on_follow_thread(follower,followee)
 
 
 
@@ -49,18 +50,18 @@ def on_post_thread(post):
 		follower = followerprofile.user
 
 		if follower not in served:
-			served.add(follower)
 			script = followerprofile.script
 
 			if script.on_post:
+				served.add(follower)
 				run_script_post(post,follower)
 
 	for user in mentioned:
 		if user not in served:
-			served.add(user)
 			script = user.userprofile.script
 
-			if script.on_post:
+			if script.on_mention:
+				served.add(user)
 				run_script_mention(post,user)
 
 
@@ -126,7 +127,6 @@ def run_script_mention(post,user):
 	errorlogger.func_input = json.dumps(func_input)
 
 	try:
-
 		response = run_script(code,'on_mention',func_input, errorlogger)
 
 		errorlogger.func_output= json.dumps(response)
@@ -245,6 +245,7 @@ def run_script(code, func_name, func_input, errorlogger) :
 		errorlogger.log_error('Error: Unknown Error')
 		return {}
 
+	print response
 	return response
 
 
@@ -313,6 +314,19 @@ def handle_response(response, user, errorlogger):
 									post=comment_form.cleaned_data['post'],
 									user=user)
 			new_comment.save()
+
+	if 'follow' in response:
+		for followee_username in response['follow']:
+			follow_form = FollowForm({'username':followee_username})
+			if not follow_form.is_valid():
+				errorlogger.log_error("Error: Invalid followee: "+str(followee_username))
+				break
+
+			followee = User.objects.get(username=follow_form.cleaned_data['username'])
+			user.userprofile.following.add(followee)
+
+			user.userprofile.save()
+
 
 
 

@@ -16,7 +16,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 
 from socialnetwork.models import Post, UserProfile, Comment, Script, LogEntry, Tag
-from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm
+from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm, FollowForm
 from socialnetwork.s3 import s3_upload, s3_delete
 from socialnetwork.scripting import on_post, on_comment, on_follow
 
@@ -50,7 +50,7 @@ def register(request):
                                         first_name=form.cleaned_data['first_name'],
                                         last_name=form.cleaned_data['last_name'],
                                         email=form.cleaned_data['email'])
-    new_user.is_active = False
+    # new_user.is_active = False
     new_user.save()
 
 
@@ -60,32 +60,39 @@ def register(request):
     new_script = Script(userprofile=new_user_profile)
     new_script.save()
 
-     # Generate a one-time use token and an email message body
-    token = default_token_generator.make_token(new_user)
 
-    email_body = """
-    Welcome to the Social Network.  Please click the link below to
-    verify your email address and complete the registration of your account:
-    http://%s%s
-    """ % (request.get_host(), 
-       reverse('confirm_registration', args=[new_user.username, token]))
+    #### Email verification
+    # 
+    #  # Generate a one-time use token and an email message body
+    # token = default_token_generator.make_token(new_user)
 
-    send_mail(subject="Verify your email address",
-              message= email_body,
-              from_email="enochc.socialnetwork@gmail.com",
-              recipient_list=[new_user.email])
+    # email_body = """
+    # Welcome to the Social Network.  Please click the link below to
+    # verify your email address and complete the registration of your account:
+    # http://%s%s
+    # """ % (request.get_host(), 
+    #    reverse('confirm_registration', args=[new_user.username, token]))
 
-    context['email'] = form.cleaned_data['email']
+    # send_mail(subject="Verify your email address",
+    #           message= email_body,
+    #           from_email="enochc.socialnetwork@gmail.com",
+    #           recipient_list=[new_user.email])
+
+    # context['email'] = form.cleaned_data['email']
+
+    # return render(request, 'socialnetwork/needs-confirmation.html',context)
+
 
 
     # Logs in the new user and redirects to global stream
-    # new_user = authenticate(username=form.cleaned_data['username'],
-    #                         password=form.cleaned_data['password1'])
-    # login(request, new_user)
+    new_user = authenticate(username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password1'])
+    login(request, new_user)
 
-    context={}
-    context['email'] = form.cleaned_data['email']
-    return render(request, 'socialnetwork/needs-confirmation.html',context)
+
+    redirect(reverse('stream'))
+
+    
 
 @transaction.atomic
 def confirm_registration(request, username, token):
@@ -311,13 +318,19 @@ def follower_stream(request):
 @login_required
 @transaction.atomic
 def follow(request, username):
-    self_user = request.user
-    user = get_object_or_404(User, username=username)
-    self_user.userprofile.following.add(user)
+    follower = request.user
 
-    self_user.userprofile.save()
+    follow_form = FollowForm({'username':username})
+    if not follow_form.is_valid():
+        return Http404
 
-    on_follow(self_user, user)
+    followee = User.objects.get(username=follow_form.cleaned_data['username'])
+
+    follower.userprofile.following.add(followee)
+
+    follower.userprofile.save()
+
+    on_follow(follower, followee)
 
     return redirect(reverse('follower_stream'))
 

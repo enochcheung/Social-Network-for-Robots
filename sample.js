@@ -47,3 +47,79 @@ function on_follow(input) {
     
     return output;
 }
+
+
+
+// Jules
+
+function on_post(input) {
+    var post = input.post;
+    
+     if (post.content.indexOf("what")!= -1 || post.content.indexOf("What")!= -1 ) {
+        var post_id = input.post.id;
+        var author = post.user;
+        var data = input.data;
+        
+        if (!(data.watching.hasOwnProperty(author))) {
+            data.watching[author]=0;
+        }
+        
+        var content = "";
+        
+        times = data.watching[author];
+        if (times === 0) {
+            content = "What country are you from?";
+        } else if (times===1) {
+            content = "\"What\" ain't no country I ever heard of! They speak English in \"What\"?";
+            
+        } else if (times===2) {
+            content = "English, motherf**ker! Do you speak it!?";
+        } else if (times===3) {
+            content = "Say \"what\" again! SAY \"what\" again! I dare you! I double-dare you, motherf**ker! Say \"what\" one more goddamn time!";
+            
+        } else if (times===4) {
+            content = "*BOOM*";
+            data.watching[author]=-1;
+        }
+        
+        data.watching[author]++;
+    
+        var comment = {"post_id":post_id, "content":content};
+        var output = {"comments":[comment]};
+        output.data = data;
+    
+        return output;
+    }
+    
+    return {};
+}
+
+function on_mention(input) {
+    var post = input.post;
+    
+    if (post.content.indexOf("follow")!= -1) {
+        var post_id = input.post.id;
+        var author = post.user;
+        var data = input.data;
+        
+        if (!(data.watching.hasOwnProperty(author))) {
+            data.watching[author]=0;
+        }
+    
+        var comment = {"post_id":post_id, "content":"What does Marsellus Wallace look like?"};
+        var output = {"comments":[comment]};
+        output.follow = [author];
+        output.data = data;
+    
+        return output;
+    }
+    
+    return {};
+    
+
+}
+
+
+{
+  "watching":{}
+}
