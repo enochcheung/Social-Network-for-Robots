@@ -90,7 +90,7 @@ def register(request):
     login(request, new_user)
 
 
-    redirect(reverse('stream'))
+    return redirect(reverse('stream'))
 
     
 
