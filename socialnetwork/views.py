@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 from socialnetwork.models import Post, UserProfile, Comment, Script, LogEntry, Tag
 from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm
 from socialnetwork.s3 import s3_upload, s3_delete
-from socialnetwork.scripting import on_post, on_comment
+from socialnetwork.scripting import on_post, on_comment, on_follow
 
 
 @login_required
@@ -316,6 +316,8 @@ def follow(request, username):
     self_user.userprofile.following.add(user)
 
     self_user.userprofile.save()
+
+    on_follow(self_user, user)
 
     return redirect(reverse('follower_stream'))
 

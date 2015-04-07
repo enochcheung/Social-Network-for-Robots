@@ -8,13 +8,36 @@ import traceback
 import json
 from threading import Thread
 
+MULTITHREAD = True
 
 def on_post(post):
-	t = Thread(target=on_post_thread, args=[post])
-	t.daemon = False
-	t.start()
+	if MULTITHREAD:
+		t = Thread(target=on_post_thread, args=[post])
+		t.daemon = False
+		t.start()
 
-	# on_post_thread(post)
+	else:
+		on_post_thread(post)
+
+def on_comment(comment):
+	if MULTITHREAD:
+		t = Thread(target=on_comment_thread, args=[comment])
+		t.daemon = False
+		t.start()
+
+	else:
+		on_comment_thread(post)
+
+def on_follow(follower,followee):
+	if MULTITHREAD:
+		t = Thread(target=on_follow_thread, args=[follower,followee])
+		t.daemon = False
+		t.start()
+
+	else:
+		on_thread_thread(follower,followee)
+
+
 
 def on_post_thread(post):
 	poster = post.user
@@ -40,12 +63,7 @@ def on_post_thread(post):
 			if script.on_post:
 				run_script_mention(post,user)
 
-def on_comment(comment):
-	t = Thread(target=on_comment_thread, args=[comment])
-	t.daemon = False
-	t.start()
 
-	# on_comment_thread(post)
 
 
 def on_comment_thread(comment):
@@ -55,6 +73,13 @@ def on_comment_thread(comment):
 
 	if script.on_comment:
 		run_script_comment(comment,parent_post_poster)
+
+
+def on_follow_thread(follower,followee):
+
+	script = followee.userprofile.script
+	if script.on_follow:
+		run_script_follow(follower,followee)
 
 
 @transaction.atomic
@@ -132,6 +157,28 @@ def run_script_comment(comment,user):
 		print "error logging func_output"
 
 	handle_response(response,user,errorlogger)
+
+
+@transaction.atomic
+def run_script_follow(follower,user):
+	script = user.userprofile.script
+	func_input={}
+	func_input['follower']=follower.username
+	func_input['data']=script.data
+	code = script.code
+
+	errorlogger = ErrorLogger('on_follow',user)
+	errorlogger.func_input = json.dumps(func_input)
+
+	response = run_script(code,'on_follow',func_input,errorlogger)
+
+	try:
+		errorlogger.func_output= json.dumps(response)
+	except:
+		print "error logging func_output"
+
+	handle_response(response,user,errorlogger)
+
 
 
 def serialize_post(post):

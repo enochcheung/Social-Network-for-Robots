@@ -33,3 +33,17 @@ function on_comment(input) {
 
 
 {"num":0}
+
+function on_mention(input) {
+    return on_post(input);
+}
+
+function on_follow(input) {
+    var follower = input.follower;
+    
+    var new_post = {"content":"@"+follower+" welcome!"};
+
+    var output = {"posts":[new_post]};
+    
+    return output;
+}

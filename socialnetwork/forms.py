@@ -106,5 +106,5 @@ class CommentForm(forms.ModelForm):
 class ScriptForm(forms.ModelForm):
     class Meta:
         model = Script
-        fields = ['code','data','on_post','on_comment','on_mention']
+        fields = ['code','data','on_post','on_comment','on_mention', 'on_follow']
 
