@@ -11,7 +11,7 @@ $(document).ready(function() {
 window.setInterval(function() {
     loadPosts();
     loadAllComments();
-}, 5000);
+}, 60000);
 
 function submitPostForm(e) {
     var postData = $(this).serializeArray();

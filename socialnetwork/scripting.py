@@ -27,7 +27,7 @@ def on_comment(comment):
 		t.start()
 
 	else:
-		on_comment_thread(post)
+		on_comment_thread(comment)
 
 def on_follow(follower,followee):
 	if MULTITHREAD:
