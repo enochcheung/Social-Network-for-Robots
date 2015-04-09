@@ -115,7 +115,7 @@ function loadPosts() {
 
 
                     loadProfilePic(this.fields.user);
-                    loadComments(this.pk);
+                    setTimeout(loadComments, 1000, this.pk);
                     $("#comment-form-"+this.pk).submit(submitCommentForm);
                 }
 
