@@ -9,7 +9,7 @@ import traceback
 import json
 from threading import Thread
 
-MULTITHREAD = False
+MULTITHREAD = True
 
 def on_post(post):
 	if MULTITHREAD:
