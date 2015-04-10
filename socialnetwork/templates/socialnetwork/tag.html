@@ -3,6 +3,7 @@
 {% block stream_header %}
 <h1>#{{tag.name}}</h1><br>
 
+<script>posts_url = "{% url 'get_tag_posts' tag.name '0000' %}";</script>
 {% endblock %}
 
 
