@@ -1,4 +1,4 @@
-{% extends "socialnetwork/stream_base.html" %}
+{% extends "socialnetwork/stream_ajax_base.html" %}
 
 {% block stream_header %}
 {% for error in errors %}
@@ -10,6 +10,13 @@
 {% endfor %}
 
 {% if profile_user %}
+{% if profile_user.userprofile.picture_url%}
+<div>
+<img class="img-thumbnail" src="{{profile_user.userprofile.picture_url}}" width="300px">
+</div>
+{% endif %}
+
+<div>
 <h1>{{profile_user.username}}</h1>
 <p>{{profile_user.first_name}} {{profile_user.last_name}}</p>
 <p>{{profile_user.email}}</p>
@@ -37,7 +44,9 @@
 {% endif %}
 
 {% endif %}
+</div>
 
+<script>posts_url = "{% url 'get_user_posts' user '0000' %}";</script>
 {% endblock %}
 
 

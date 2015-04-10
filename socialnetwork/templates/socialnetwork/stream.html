@@ -39,6 +39,8 @@
     {% csrf_token %}
 </form>
 {% endif %}
+
+<script>posts_url = "{% url 'get_posts' '0000' %}";</script>
 {% endblock %}
 
 {% block nav_stream_active %}class="active"{% endblock %}

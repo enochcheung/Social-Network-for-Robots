@@ -1,4 +1,4 @@
-{% extends "socialnetwork/stream_base.html" %}
+{% extends "socialnetwork/stream_ajax_base.html" %}
 
 {% block stream_header %}
 <h1>Follower Stream</h1><br>
@@ -6,6 +6,8 @@
 <p>Following: 
 {% for following_user in following %}{% if not forloop.first %}, {% endif %}<a href="{% url 'profile' following_user.username %}">{{following_user.username}}</a>{% endfor %}
 </p>
+
+<script>posts_url = "{% url 'get_following_posts' user '0000' %}";</script>
 {% endblock %}
 
 {% block nav_follower_stream_active %}class="active"{% endblock %}

@@ -1,6 +1,7 @@
 var posts = [];
 var posts_start=0;
 var comments_start = new Map();
+// variables from html document: csrfstring, posts_url
 
 $(document).ready(function() {
     loadPosts();
@@ -58,7 +59,7 @@ function loadAllComments() {
 
 function loadPosts() {
     $.ajax({
-        url: "/get_posts/"+posts_start+"/",
+        url: posts_url.replace("0000",posts_start),
         dataType : "json",
         success: function( items ) {
             
@@ -115,7 +116,8 @@ function loadPosts() {
 
 
                     loadProfilePic(this.fields.user);
-                    setTimeout(loadComments, 1000, this.pk);
+                    loadComments(this.pk);
+                    //setTimeout(loadComments, 1000, this.pk);
                     $("#comment-form-"+this.pk).submit(submitCommentForm);
                 }
 

@@ -24,7 +24,7 @@ from socialnetwork.scripting import on_post, on_comment, on_follow
 @login_required
 def stream(request):
     context = {}
-    context['posts'] = Post.objects.all()[::-1]
+    context['posts'] = Post.objects.all().order_by('-id')
     context['post_form'] = PostForm()
     return render(request, 'socialnetwork/stream.html',context)
 
@@ -114,7 +114,7 @@ def confirm_registration(request, username, token):
 def post(request):
     context={}
     if request.method == 'GET':
-        context['posts'] = Post.objects.all()[::-1]
+        context['posts'] = Post.objects.all().order_by('-id')
         context['post_form'] = PostForm()
         return render(request, 'socialnetwork/stream.html',context)
 
@@ -122,7 +122,7 @@ def post(request):
     context['form']=form
 
     if not form.is_valid():
-        context['posts'] = Post.objects.all()[::-1]
+        context['posts'] = Post.objects.all().order_by('-id')
         return render(request, 'socialnetwork/stream.html',context) 
 
     new_post = Post(content=form.cleaned_data['content'], user=request.user)
@@ -131,7 +131,7 @@ def post(request):
     on_post(new_post)
 
     context['post_form'] = PostForm()
-    context['posts'] = Post.objects.all()[::-1]
+    context['posts'] = Post.objects.all().order_by('-id')
     return render(request, 'socialnetwork/stream.html', context)
     
 @login_required
@@ -157,11 +157,37 @@ def comment(request):
 
 @login_required
 def get_posts(request,start_id=0):
-    posts = Post.objects.filter(id__gte=start_id)
+    posts = Post.objects.filter(id__gte=start_id).order_by('-id')[:10][::-1]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
+
+@login_required
+def get_user_posts(request,username,start_id=0):
+    user = get_object_or_404(User, username=username)
+    posts = user.post_set.filter(id__gte=start_id)
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
+@login_required
+def get_following_posts(request,username,start_id=0):
+    user = get_object_or_404(User, username=username)
+    posts = user.post_set.filter(id__gte=start_id)
+    following = request.user.userprofile.following.all()
+    posts = Post.objects.filter(user__in=following, id__gte=start_id)
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
+@login_required
+def get_tag_posts(request,tag_name,start_id=0):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.filter(id__gte=start_id)
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
 
 
@@ -183,7 +209,7 @@ def profile(request, username):
     try:
         user = User.objects.get(username=username)
         context['profile_user']=user
-        posts = Post.objects.filter(user=user)[::-1]
+        posts = Post.objects.filter(user=user).order_by('-id')
         context['posts']=posts
 
         if request.user.userprofile.following.filter(username=user.username):
@@ -290,7 +316,7 @@ def scripts(request):
 @login_required
 def log(request):
     context={}
-    context['log'] = request.user.userprofile.logentry_set.all()[::-1]
+    context['log'] = request.user.userprofile.logentry_set.all().order_by('-id')
 
     return render(request, 'socialnetwork/log.html',context)
 
@@ -312,7 +338,7 @@ def follower_stream(request):
     context = {}
     following = request.user.userprofile.following.all()
     context['following'] = following
-    context['posts'] = Post.objects.filter(user__in=following)[::-1]
+    context['posts'] = Post.objects.filter(user__in=following).order_by('-id')
     return render(request, 'socialnetwork/follower_stream.html',context)
 
 @login_required

@@ -4,7 +4,9 @@
 <h1>Log</h1>
 <ul class="list-unstyled">
 {% for log_entry in log%}
-<li><a href="{% url 'log_entry' log_entry.id %}">[{{log_entry.date}}] {{log_entry.content|truncatechars:140}}</a></li>
+<li>
+<a href="{% url 'log_entry' log_entry.id %}">[{{log_entry.date|date:"m/d/y H:m:s"}}] {{log_entry.content|truncatechars:140}}</a>
+</li>
 {% endfor %}
 </ul>
 
