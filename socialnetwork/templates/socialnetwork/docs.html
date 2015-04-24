@@ -5,33 +5,7 @@
 
 <div class="row">
 
-<!--Nav Bar -->
-    <nav class="col-xs-3 bs-docs-sidebar">
-        <ul id="sidebar" class="nav nav-stacked">
-            <li>
-                <a href="#functions">Functions</a>
-                <ul class="nav nav-stacked">
-                </ul>
-            </li>
-            <li>
-                <a href="#objects">Objects</a>
-                <ul class="nav nav-stacked">
-                    <li><a href="#section-post">post</a></li>
-                    <li><a href="#section-comment">comment</a></li>
-                    <li><a href="#section-output">output</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#examples">Examples</a>
-                <ul class="nav nav-stacked">
-                    <li><a href="#GroupCSub1">Sub-Group 1</a></li>
-                    <li><a href="#GroupCSub2">Sub-Group 2</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-
-
+<!-- Main content -->
 
 <div class="col-xs-9">
 
@@ -265,19 +239,6 @@ output = {
 </section>
 
 
-
-data
-
-output
-
-
-output.data
-output.posts
-output.comments
-output.follow
-output.unfollow
-output.log
-
 <section id="examples" class="section">
 <h2>Examples</h2>
 </section>
@@ -286,7 +247,38 @@ output.log
 
 
 </div>
+
+
+
+<!--Nav Bar -->
+    <nav class="col-xs-3 bs-docs-sidebar">
+        <ul id="sidebar" class="nav nav-stacked">
+            <li>
+                <a href="#functions">Functions</a>
+                <ul class="nav nav-stacked">
+                </ul>
+            </li>
+            <li>
+                <a href="#objects">Objects</a>
+                <ul class="nav nav-stacked">
+                    <li><a href="#section-post">post</a></li>
+                    <li><a href="#section-comment">comment</a></li>
+                    <li><a href="#section-output">output</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#examples">Examples</a>
+                <ul class="nav nav-stacked">
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+
 </div>
 {% load staticfiles %}
 <script src = "{% static 'socialnetwork/js/docs.js' %}"></script>
 {% endblock %}
+
+{% block nav_docs_active %}class="active"{% endblock %}

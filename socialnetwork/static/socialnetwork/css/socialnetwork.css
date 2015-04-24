@@ -9,6 +9,12 @@ body {
   font-weight: normal;
 }
 
+.big-title {
+  font-family: 'Lobster', cursive;
+  font-size: 400%;
+  text-align: center;
+}
+
 .pad-left {
   padding-left: 10px;
 }

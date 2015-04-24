@@ -57,6 +57,7 @@
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
+            <li {% block nav_docs_active %}{% endblock %}><a href="{% url 'docs' %}">Docs</a></li>
             {% if not user.is_authenticated %}
             <li {% block nav_login_active %}{% endblock %}><a href="{% url 'login' %}">Log in</a></li>
             {% else %}

@@ -27,7 +27,7 @@ $(window).scroll(function()
 window.setInterval(function() {
     loadPosts(false);
     loadAllComments();
-}, 60000);
+}, 30000);
 
 function submitPostForm(e) {
     var postData = $(this).serializeArray();
@@ -38,6 +38,8 @@ function submitPostForm(e) {
         data: postData,
         success: function() {
             loadPosts(true);
+
+            setTimeout(loadPosts,1000, false);
         }
     });
     e.preventDefault();
@@ -54,6 +56,7 @@ function submitCommentForm(e) {
         success: function() {
             post_id = postIdFromCommentForm(commentData);
             loadComments(post_id);
+            setTimeout(loadComments, 1000, post_id);
         }
     });
     e.preventDefault();
