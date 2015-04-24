@@ -4,17 +4,29 @@ body {
 
 .my-brand {
   font-family: 'Lobster', cursive;
-  font-size: 150%;
+  font-size: 200%;
   color: #5CE6E6;
   font-weight: normal;
 }
 
-.pad-left{
+.pad-left {
   padding-left: 10px;
 }
 
-.profile-pic{
-  width: 75px;
+.profile-pic img {
+  border-radius:50%;
+    width: 300px;
+    height: 300px;
+    margin-right: 10px;
+    margin-top: 0px;
+}
+
+.small-profile-pic img {
+  border-radius:50%;
+    width: 84px;
+    height: 84px;
+    margin-right: 10px;
+    margin-top: 0px;
 }
 
 .centered-content {
@@ -64,4 +76,73 @@ body {
 
 .form-register input {
 	margin-bottom: 10px;
+}
+
+.posts-list {
+    list-style: none;  
+    padding: 0;
+}
+.posts-list li {
+    margin:0;
+    margin-top:10px;
+}
+
+.posts-list li > div {
+    display:table-cell;
+}
+
+.posts-list .post-img {
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+.posts-list img {
+    border-radius:50%;
+    width: 84px;
+    height: 84px;
+    margin-right: 10px;
+    margin-top: 0px;
+}
+
+.posts-list .post-text {
+  vertical-align: top;
+}
+.posts-list p {
+    margin: 0;
+}
+
+.posts-list span {
+    font-size: .8em; 
+    color: #aaa;
+}
+
+.comments-list {
+    list-style: none;  
+    padding: 0;
+}
+.comments-list li {
+    margin:0;
+    margin-top:10px;
+}
+
+.comments-list li > div {
+    display:table-cell;
+}
+
+.comments-list img {
+    border-radius:50%;
+    width: 42px;
+    height: 42px;
+    margin-right: 10px;
+    margin-top: 0px;
+    vertical-align: top;
+}
+
+.comments-list p {
+    margin: 0;
+}
+
+.comments-list span {
+    font-size: .8em; 
+    color: #aaa;
 }

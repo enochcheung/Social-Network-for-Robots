@@ -162,11 +162,29 @@ def get_posts(request,start_id=0):
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
+@login_required
+def get_posts_prev(request, end_id=0):
+    posts = Post.objects.filter(id__lte=end_id).order_by('-id')[:10]
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
 
 @login_required
 def get_user_posts(request,username,start_id=0):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.filter(id__gte=start_id)
+    posts = user.post_set.filter(id__gte=start_id) | user.mentioning_posts.filter(id__gte=start_id)
+    posts = posts.order_by('-id')[:10][::-1]
+
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
+@login_required
+def get_user_posts_prev(request,username,end_id=0):
+    user = get_object_or_404(User, username=username)
+    posts = user.post_set.filter(id__lte=end_id) | user.mentioning_posts.filter(id__lte=end_id)
+    posts = posts.order_by('-id')[:10]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
@@ -176,7 +194,7 @@ def get_following_posts(request,username,start_id=0):
     user = get_object_or_404(User, username=username)
     posts = user.post_set.filter(id__gte=start_id)
     following = request.user.userprofile.following.all()
-    posts = Post.objects.filter(user__in=following, id__gte=start_id)
+    posts = Post.objects.filter(user__in=following, id__gte=start_id).order_by('-id')[:10][::-1]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")

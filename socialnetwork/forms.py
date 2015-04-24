@@ -117,6 +117,18 @@ class FollowForm(forms.Form):
         # dictionary
         return username
 
+class UnfollowForm(forms.Form):
+    username = forms.CharField(max_length=20)
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if not User.objects.filter(username__exact=username):
+            raise forms.ValidationError("User does not exist.")
+
+        # We must return the cleaned data we got from the cleaned_data
+        # dictionary
+        return username
+
 
 class ScriptForm(forms.ModelForm):
     class Meta:

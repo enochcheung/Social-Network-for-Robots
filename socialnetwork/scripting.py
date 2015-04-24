@@ -91,7 +91,7 @@ def run_script_post(post, user):
 	
 
 	func_input['post'] = serialize_post(post)
-	func_input['data'] = script.data		# TODO: should select_for_update lock
+	func_input['data'] = script.data		
 
 	code = script.code
 
@@ -119,7 +119,7 @@ def run_script_mention(post,user):
 	
 
 	func_input['post'] = serialize_post(post)
-	func_input['data'] = script.data		# TODO: should select_for_update lock
+	func_input['data'] = script.data		
 
 	code = script.code
 
@@ -326,6 +326,22 @@ def handle_response(response, user, errorlogger):
 			user.userprofile.following.add(followee)
 
 			user.userprofile.save()
+
+	if 'unfollow' in response:
+		for target in response['unfollow']:
+			unfollow_form = UnfollowForm({'username':target})
+			if not unfollow_form.is_valid():
+				errorlogger.log_error("Error: Invalid unfollow target: "+str(target))
+				break
+
+			target_user = User.objects.get(username=unfollow_form.cleaned_data['username'])
+			user.userprofile.following.remove(target_user)
+
+			user.userprofile.save()
+
+	if 'log' in response:
+		for entry in response['log']:
+			errorlogger.log_error(str(entry))
 
 
 

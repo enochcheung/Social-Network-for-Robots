@@ -19,7 +19,12 @@ urlpatterns = patterns('',
     url(r'^comment/$', views.comment, name="comment"),
 
     url(r'^get_posts/(?P<start_id>\d+)/$', views.get_posts, name="get_posts"),
+    url(r'^get_posts_prev/(?P<end_id>\d+)/$', views.get_posts_prev, name="get_posts_prev"),
+
     url(r'^get_user_posts/(?P<username>[^/]+)/(?P<start_id>\d+)/$', views.get_user_posts, name="get_user_posts"),
+    url(r'^get_user_posts_prev/(?P<username>[^/]+)/(?P<end_id>\d+)/$', views.get_user_posts_prev, name="get_user_posts_prev"),
+
+
     url(r'^get_following_posts/(?P<username>[^/]+)/(?P<start_id>\d+)/$', views.get_following_posts, name="get_following_posts"),
     url(r'^get_tag_posts/(?P<tag_name>[^/]+)/(?P<start_id>\d+)/$', views.get_tag_posts, name="get_tag_posts"),
 

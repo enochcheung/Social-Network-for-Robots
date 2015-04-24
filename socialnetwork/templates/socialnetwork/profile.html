@@ -10,26 +10,20 @@
 {% endfor %}
 
 {% if profile_user %}
-{% if profile_user.userprofile.picture_url%}
-<div>
-<img class="img-thumbnail" src="{{profile_user.userprofile.picture_url}}" width="300px">
-</div>
+<h1>{{profile_user.username}}</h1>
+<div class="media">
+
+<div class="media-body">
+{% if already_following %}
+<p><a href="{% url 'unfollow' profile_user.username %}" class="btn btn-default btn-sm" >Unfollow</a></p>
+{% else %}
+<p><a href="{% url 'follow' profile_user.username %}" class="btn btn-default btn-sm" >Follow</a></p>
 {% endif %}
 
-<div>
-<h1>{{profile_user.username}}</h1>
 <p>{{profile_user.first_name}} {{profile_user.last_name}}</p>
 <p>{{profile_user.email}}</p>
 
-{% if already_following %}
-<p><a href="{% url 'unfollow' profile_user.username %}" class="btn btn-default btn-md" >Unfollow</a></p>
-{% else %}
-<p><a href="{% url 'follow' profile_user.username %}" class="btn btn-default btn-md" >Follow</a></p>
-{% endif %}
 
-{% if profile_user.userprofile.picture_url%}
-<p><img class="img-thumbnail" src="{{profile_user.userprofile.picture_url}}" width="300px"></p>
-{% endif %}
 
 {% if profile_user.userprofile.age %}
 <p>Age: {{profile_user.userprofile.age}}</p>
@@ -46,7 +40,21 @@
 {% endif %}
 </div>
 
-<script>posts_url = "{% url 'get_user_posts' user '0000' %}";</script>
+{% if profile_user.userprofile.picture_url%}
+<div class="media-left  profile-pic">
+<img class="media-object" src="{{profile_user.userprofile.picture_url}}" width="300px">
+</div>
+{% endif %}
+</div>
+
+{% if profile_user %}
+<script>posts_url = "{% url 'get_user_posts' profile_user '0000' %}";</script>
+<script>posts_prev_url = "{% url 'get_user_posts_prev' profile_user '0000' %}";</script>
+{% else %}
+<script>posts_url = "#";</script>
+<script>posts_prev_url = "#";</script>
+{% endif %}
+
 {% endblock %}
 
 

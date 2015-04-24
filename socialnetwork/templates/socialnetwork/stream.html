@@ -24,23 +24,40 @@
 </div>
 
 {% endfor %}
+<div class="media">
+<div class="media-left">
+    <div class="media-left  small-profile-pic">
+    {% if user.userprofile.picture_url%}
+        <img class="media-object" src="{{user.userprofile.picture_url}}" width="84px">
+    {% else %}
+    {% load staticfiles %}
+        <img class="media-object" src="{% static 'socialnetwork/images/default-profile-pic.png' %}" width="84px">
+    {% endif %}
+    </div>
+</div>
+<div class="media-body">
 <form id="post-form" action="{% url 'post' %}" method="POST">
 	<label for="{{ post_form.content.id_for_label }}" >Enter a new post</label>
     <div class="form-group">
-    	<textarea type="text" rows="3"
+        <div class="input-group">
+    	<input type="text"
     		id="{{ post_form.content.id_for_label }}"
     		class="form-control"
     		placeholder="I am under the delusion that other people are interested in what I have to say"
     		name="{{ post_form.content.html_name }}"
     		{%if form.content.value %}value="{{ post_form.content.value }}"{% endif %}
-    		maxlength='160' required autofocus></textarea>
+    		maxlength='160' required autofocus></input>
+        <div class='input-group-btn'><button class='btn btn-md btn-primary' type='submit'>Post</button></div>
     </div>
-    <div class="text-right"><button class="btn btn-md btn-primary" type="submit">Post</button></div>
     {% csrf_token %}
 </form>
+</div>
+</div>
+<br>
 {% endif %}
 
 <script>posts_url = "{% url 'get_posts' '0000' %}";</script>
+<script>posts_prev_url = "{% url 'get_posts_prev' '0000' %}";</script>
 {% endblock %}
 
 {% block nav_stream_active %}class="active"{% endblock %}
