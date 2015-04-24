@@ -192,7 +192,6 @@ def get_user_posts_prev(request,username,end_id=0):
 @login_required
 def get_following_posts(request,username,start_id=0):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.filter(id__gte=start_id)
     following = request.user.userprofile.following.all()
     posts = Post.objects.filter(user__in=following, id__gte=start_id).order_by('-id')[:10][::-1]
     context = {'posts':posts}
@@ -200,13 +199,29 @@ def get_following_posts(request,username,start_id=0):
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
 @login_required
-def get_tag_posts(request,tag_name,start_id=0):
-    tag = get_object_or_404(Tag, name=tag_name)
-    posts = tag.posts.filter(id__gte=start_id)
+def get_following_posts_prev(request,username,end_id=0):
+    user = get_object_or_404(User, username=username)
+    following = request.user.userprofile.following.all()
+    posts = Post.objects.filter(user__in=following, id__lte=end_id).order_by('-id')[:10]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
+@login_required
+def get_tag_posts(request,tag_name,start_id=0):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.filter(id__gte=start_id).order_by('-id')[:10][::-1]
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
+
+@login_required
+def get_tag_posts_prev(request,tag_name,end_id=0):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.filter(id__lte=end_id).order_by('-id')[:10]
+    context = {'posts':posts}
+
+    return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
 
 
 @login_required

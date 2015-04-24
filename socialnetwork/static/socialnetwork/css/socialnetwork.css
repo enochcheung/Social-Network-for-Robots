@@ -146,3 +146,8 @@ body {
     font-size: .8em; 
     color: #aaa;
 }
+
+#post-form form {
+  padding-left:0;
+  padding-right:0;
+}

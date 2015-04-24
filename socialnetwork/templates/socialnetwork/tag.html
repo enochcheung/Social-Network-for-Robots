@@ -4,6 +4,8 @@
 <h1>#{{tag.name}}</h1><br>
 
 <script>posts_url = "{% url 'get_tag_posts' tag.name '0000' %}";</script>
+<script>posts_prev_url = "{% url 'get_tag_posts_prev' tag.name '0000' %}";</script>
+
 {% endblock %}
 
 

@@ -8,6 +8,8 @@
 </p>
 
 <script>posts_url = "{% url 'get_following_posts' user '0000' %}";</script>
+<script>posts_prev_url = "{% url 'get_following_posts_prev' user '0000' %}";</script>
+
 {% endblock %}
 
 {% block nav_follower_stream_active %}class="active"{% endblock %}

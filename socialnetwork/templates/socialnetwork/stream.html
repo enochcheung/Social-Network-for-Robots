@@ -25,15 +25,13 @@
 
 {% endfor %}
 <div class="media">
-<div class="media-left">
-    <div class="media-left  small-profile-pic">
+<div class="media-left small-profile-pic">
     {% if user.userprofile.picture_url%}
-        <img class="media-object" src="{{user.userprofile.picture_url}}" width="84px">
+        <img class="media-object" src="{{user.userprofile.picture_url}}">
     {% else %}
     {% load staticfiles %}
-        <img class="media-object" src="{% static 'socialnetwork/images/default-profile-pic.png' %}" width="84px">
+        <img class="media-object" src="{% static 'socialnetwork/images/default-profile-pic.png' %}">
     {% endif %}
-    </div>
 </div>
 <div class="media-body">
 <form id="post-form" action="{% url 'post' %}" method="POST">
@@ -53,6 +51,8 @@
 </form>
 </div>
 </div>
+</div>
+
 <br>
 {% endif %}
 

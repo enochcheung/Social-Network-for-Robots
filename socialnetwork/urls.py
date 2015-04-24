@@ -24,9 +24,11 @@ urlpatterns = patterns('',
     url(r'^get_user_posts/(?P<username>[^/]+)/(?P<start_id>\d+)/$', views.get_user_posts, name="get_user_posts"),
     url(r'^get_user_posts_prev/(?P<username>[^/]+)/(?P<end_id>\d+)/$', views.get_user_posts_prev, name="get_user_posts_prev"),
 
-
     url(r'^get_following_posts/(?P<username>[^/]+)/(?P<start_id>\d+)/$', views.get_following_posts, name="get_following_posts"),
+    url(r'^get_following_posts_prev/(?P<username>[^/]+)/(?P<end_id>\d+)/$', views.get_following_posts_prev, name="get_following_posts_prev"),
+
     url(r'^get_tag_posts/(?P<tag_name>[^/]+)/(?P<start_id>\d+)/$', views.get_tag_posts, name="get_tag_posts"),
+    url(r'^get_tag_posts_prev/(?P<tag_name>[^/]+)/(?P<end_id>\d+)/$', views.get_tag_posts_prev, name="get_tag_posts_prev"),
 
     url(r'^get_comments/(?P<post_id>\d+)/(?P<start_id>\d+)/$', views.get_comments, name="get_comments"),
 
