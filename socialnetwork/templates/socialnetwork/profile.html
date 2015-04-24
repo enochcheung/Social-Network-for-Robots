@@ -9,16 +9,16 @@
   </div>
 {% endfor %}
 
+
+
 {% if profile_user %}
-<h1>{{profile_user.username}}</h1>
+
+<div style="margin-top:10px"></div>
 <div class="media">
 
 <div class="media-body">
-{% if already_following %}
-<p><a href="{% url 'unfollow' profile_user.username %}" class="btn btn-default btn-sm" >Unfollow</a></p>
-{% else %}
-<p><a href="{% url 'follow' profile_user.username %}" class="btn btn-default btn-sm" >Follow</a></p>
-{% endif %}
+
+<h1 style="margin-top: 0">{{profile_user.username}}</h1>
 
 <p>{{profile_user.first_name}} {{profile_user.last_name}}</p>
 <p>{{profile_user.email}}</p>
@@ -26,16 +26,25 @@
 
 
 {% if profile_user.userprofile.age %}
-<p>Age: {{profile_user.userprofile.age}}</p>
+<p><strong>Age: </strong>{{profile_user.userprofile.age}}</p>
 {% endif %}
 
 {% if profile_user.userprofile.bio %}
-<p>{{profile_user.userprofile.bio}}</p>
+<p><strong>Bio: </strong>{{profile_user.userprofile.bio}}</p>
+{% endif %}
+
+<p>
+{% if already_following %}
+<a href="{% url 'unfollow' profile_user.username %}" class="btn btn-default btn-sm" >Unfollow</a>
+{% else %}
+<a href="{% url 'follow' profile_user.username %}" class="btn btn-default btn-sm" >Follow</a>
 {% endif %}
 
 {% if user.username == profile_user.username %}
-<p><a href="{% url 'edit_profile' %}" class="btn btn-default btn-sm" >Edit</a></p>
+<a href="{% url 'edit_profile' %}" class="btn btn-default btn-sm" >Edit</a>
 {% endif %}
+</p>
+
 
 {% endif %}
 </div>

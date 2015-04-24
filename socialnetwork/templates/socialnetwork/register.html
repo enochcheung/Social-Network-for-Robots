@@ -1,7 +1,8 @@
 {% extends "socialnetwork/base.html" %}
 
 {% block content %}
-<form class="form-register" action="{% url 'register' %}" method="POST">
+<div class="centered-content">
+<form class="form-horizontal" action="{% url 'register' %}" method="POST">
   <h2 class="form-register-heading">Register</h2>
   {% for field,errors in form.errors.items %}
   {% if field != '__all__' %}
@@ -25,8 +26,9 @@
   </div>
   {% endfor %}
 
-    
-    <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.username.id_for_label }}" class="col-sm-2 control-label">{{ form.username.label }}:</label>
+    <div class="col-sm-10">
     <input type="text" 
       id="{{ form.username.id_for_label }}" 
       class="form-control" 
@@ -34,24 +36,36 @@
       {%if form.username.value %}value="{{ form.username.value }}"{% endif %} 
       name="{{ form.username.html_name }}" 
       {% if form.username.field.required %}required{% endif %} autofocus>
+    </div>
+    </div>
 
-    <label for="{{ form.password1.id_for_label }}" class="sr-only">{{ form.password1.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.password1.id_for_label }}" class="col-sm-2 control-label">{{ form.password1.label }}:</label>
+    <div class="col-sm-10">
     <input type="password" 
       id="{{ form.password1.id_for_label }}" 
       class="form-control" 
       placeholder="{{ form.password1.label }}" 
       name="{{ form.password1.html_name }}" 
       {% if form.password1.field.required %}required{% endif %}>  
+    </div>
+    </div>
 
-    <label for="{{ form.password2.id_for_label }}" class="sr-only">{{ form.password2.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.password2.id_for_label }}" class="col-sm-2 control-label">{{ form.password2.label }}:</label>
+    <div class="col-sm-10">
     <input type="password" 
       id="{{ form.password2.id_for_label }}" 
       class="form-control" 
       placeholder="{{ form.password2.label }}" 
       name="{{ form.password2.html_name }}" 
       {% if form.password2.field.required %}required{% endif %}>
+    </div>
+    </div>
 
-    <label for="{{ form.email.id_for_label }}" class="sr-only">{{ form.email.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.email.id_for_label }}" class="col-sm-2 control-label">{{ form.email.label }}:</label>
+    <div class="col-sm-10">
     <input type="text" 
       id="{{ form.email.id_for_label }}" 
       class="form-control" 
@@ -59,8 +73,12 @@
       {%if form.email.value %}value="{{ form.email.value }}"{% endif %} 
       name="{{ form.email.html_name }}" 
       {% if form.email.field.required %}required{% endif %}>  
+    </div>
+    </div>
 
-    <label for="{{ form.first_name.id_for_label }}" class="sr-only">{{ form.first_name.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.first_name.id_for_label }}" class="col-sm-2 control-label">{{ form.first_name.label }}:</label>
+    <div class="col-sm-10">
     <input type="text" 
       id="{{ form.first_name.id_for_label }}" 
       class="form-control" 
@@ -68,8 +86,12 @@
       {%if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %} 
       name="{{ form.first_name.html_name }}" 
       {% if form.first_name.field.required %}required{% endif %}>  
+    </div>
+    </div>
 
-    <label for="{{ form.last_name.id_for_label }}" class="sr-only">{{ form.last_name.label }}:</label>
+    <div class="form-group">
+    <label for="{{ form.last_name.id_for_label }}" class="col-sm-2 control-label">{{ form.last_name.label }}:</label>
+    <div class="col-sm-10">
     <input type="text" 
       id="{{ form.last_name.id_for_label }}" 
       class="form-control" 
@@ -77,10 +99,13 @@
       {%if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %} 
       name="{{ form.last_name.html_name }}" 
       {% if form.last_name.field.required %}required{% endif %}>
+    </div>
+    </div>
 
     {% csrf_token %}
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    <button class="btn btn-md btn-primary" type="submit">Register</button>
 
 </form>
+</div>
 {% endblock %}
