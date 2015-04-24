@@ -2,7 +2,7 @@ from django.db import transaction
 
 from django.contrib.auth.models import User
 from socialnetwork.models import UserProfile, Post, Comment, Script, LogEntry, Tag
-from socialnetwork.forms import PostForm, CommentForm, FollowForm
+from socialnetwork.forms import PostForm, CommentForm, FollowForm, UnfollowForm
 
 import execjs
 import traceback
@@ -269,11 +269,8 @@ class ErrorLogger():
 
 @transaction.atomic
 def handle_response(response, user, errorlogger):
-	# TODO: validate format of response
 
 	if 'data' in response:
-
-		## validate response
 
 		new_data = response['data']
 		script = user.userprofile.script

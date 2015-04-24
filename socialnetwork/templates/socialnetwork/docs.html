@@ -1,0 +1,292 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+
+
+<div class="row">
+
+<!--Nav Bar -->
+    <nav class="col-xs-3 bs-docs-sidebar">
+        <ul id="sidebar" class="nav nav-stacked">
+            <li>
+                <a href="#functions">Functions</a>
+                <ul class="nav nav-stacked">
+                </ul>
+            </li>
+            <li>
+                <a href="#objects">Objects</a>
+                <ul class="nav nav-stacked">
+                    <li><a href="#section-post">post</a></li>
+                    <li><a href="#section-comment">comment</a></li>
+                    <li><a href="#section-output">output</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#examples">Examples</a>
+                <ul class="nav nav-stacked">
+                    <li><a href="#GroupCSub1">Sub-Group 1</a></li>
+                    <li><a href="#GroupCSub2">Sub-Group 2</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+
+<div class="col-xs-9">
+
+<h1>Documentation</h1>
+
+<section id="functions" class="section">
+<h2>Functions</h2>
+
+<p>You can provide certain functions that are triggered when certain events occur. For your function to be called, you need to mark it as active. You do not have to provide functions that are not active. Persistant data storage is available to your scripts, shared across all your functions, which allows your scripts to maintain state.</p>
+
+
+<p>
+Each function you provide takes an <code>input</code> object as input, and should return an <code>output</code> object. The <code>input</code> object contains relavent information about the event, and the keys in <code>input</code> object will vary depending on the function. The persistant data storage is accessed through the <code>input.data</code> object, and should you choose to update it, the <code>data</code> object should be passed back as <code>output.data</code>.
+
+<p>Your functions should be in JavaScript, and will be executed in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>, and can time out. If an error occures when your scripts are executed, or if the <code>output</code> you return is ill-formed, an entry will be <a href="{% url 'log' %}">logged</a> with information to help you debug.</p>
+
+</p>
+
+<table class="table">
+<thead>
+	<th>Function</th>
+	<th>Description</th>
+	<th>Keys</th>
+</thead>
+<tr>
+	<td><code>on_post</code></td>
+	<td>Called when a user you are following makes a post.</td>
+	<td><code>input.post</code>, <code>input.data</code></td>
+</tr>
+<tr>
+	<td><code>on_comment</code></td>
+	<td>Called when someone comments on a post you made.</td>
+	<td><code>input.comment</code>, <code>input.data</code></td>
+</tr>
+<tr>
+	<td><code>on_mention</code></td>
+	<td>Called when a post mentions you. This function will not be called if <code>on_post</code> is already triggered for this event.</td>
+	<td><code>input.post</code>, <code>input.data</code></td>
+</tr>
+<tr>
+	<td><code>on_follow</code></td>
+	<td>Called when a user starts following you. <code>input.follower</code> is the username of the user that starts following you.</td>
+	<td><code>input.follower</code>, <code>input.data</code></td>
+</tr>
+</table>
+
+</section>
+
+
+<section id="objects" class="section">
+<h2>Objects</h2>
+
+<div id="section-post" class="subsection">
+<h3>post</h3>
+
+<table class="table">
+<thead>
+	<th>Key</th>
+	<th>Description</th>
+</thead>
+<tbody>
+<tr>
+	<td><code>post.id</code></td>
+	<td>Unique numerical id for the post.</td>
+</tr>
+<tr>
+	<td><code>post.content</code></td>
+	<td>Content of the post, as a string.</td>
+</tr>
+<tr>
+	<td><code>post.user</code></td>
+	<td>Username of the user making the post.</td>
+</tr>
+<tr>
+	<td><code>post.date</code></td>
+	<td>Datetime of the post, in ISO 8601 format.</td>
+</tr>
+<tr>
+	<td><code>post.tags</code></td>
+	<td>List of tags that appears in the post. Each tag is an object with a key <code>tag.name</code>.</td>
+</tr>
+<tr>
+	<td><code>post.mentioned</code></td>
+	<td>List of users that is mentioned (with @ tag) in the post. Each user is an object with a key <code>tag.username</code>. Only users that currently exists will be included.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<p>
+<strong>Example:</strong>
+<pre>
+input.post = {
+	"id":289,
+	"content": "@alan @ben Hello! #tag1 #tag2",
+	"user":"carrie",
+	"date":"2015-04-24 14:51:37.180020+00:00",
+	"tags": [{"name":"tag1"}, {"name":"tag2"}],
+	"mentioned":[{"username":"alan"}, {"username":"ben"}]
+}
+</pre>
+</p>
+</div>
+
+<div id="section-comment" class="subsection">
+<h3>comment</h3>
+
+
+<table class="table">
+<thead>
+	<th>Key</th>
+	<th>Description</th>
+</thead>
+<tbody>
+<tr>
+	<td><code>comment.id</code></td>
+	<td>Unique numerical id for the comment.</td>
+</tr>
+<tr>
+	<td><code>comment.content</code></td>
+	<td>Content of the comment, as a string.</td>
+</tr>
+<tr>
+	<td><code>comment.user</code></td>
+	<td>Username of the user making the comment.</td>
+</tr>
+<tr>
+	<td><code>comment.date</code></td>
+	<td>Datetime of the comment, in ISO 8601 format.</td>
+</tr>
+<tr>
+	<td><code>comment.parent_post</code></td>
+	<td>The post that this comment is attached to. The post is given as a <a href="#section-post">post</a> object.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<p>
+<strong>Example:</strong>
+<pre>
+input.comment = {
+	"id":208,
+	"content": "Hello to you too!",
+	"user":"alan",
+	"date":"2015-04-24 14:58:37.180020+00:00",
+	"parent_post": {
+		"id":289,
+		"content": "@alan Hello!",
+		"user":"carrie",
+		"date":"2015-04-24 14:51:37.180020+00:00",
+		"tags": [],
+		"mentioned":[{"username":"alan"}]
+	}
+}
+</pre>
+</p>
+</div>
+
+
+
+
+
+<div id="section-output" class="subsection">
+<h3>output</h3>
+
+<p>An <code>output</code> object should be returned by every function, containing information on the actions you want to take as a response to an event. The schema for the output is the same for every function. All of the following keys are optional, meaning that if you do not wish to take an action of a certain type, then you do not need to include the corresponding key.</p>
+
+
+<table class="table">
+<thead>
+	<th>Key</th>
+	<th>Description</th>
+</thead>
+<tbody>
+<tr>
+	<td><code>output.data</code></td>
+	<td>An updated <code>data</code> object for your persistent data storage. If you do not wish to update your data storage, simply exclude this key in your <code>output</code>. </td>
+</tr>
+<tr>
+	<td><code>output.posts</code></td>
+	<td>A list of posts to be posted. Each <code>post</code> in <code>output.posts</code> must specify <code>post.content</code>. </td>
+</tr>
+<tr>
+	<td><code>output.comments</code></td>
+	<td>A list of comments to be posted. Each <code>comment</code> in <code>output.comments</code> must specify <code>comment.content</code>, and <code>comment.post_id</code> which is the id for the post this comment should be attached to. </td>
+</tr>
+<tr>
+	<td><code>output.follow</code></td>
+	<td>A list of usernames for users you want to follow.</td>
+</tr>
+<tr>
+	<td><code>output.unfollow</code></td>
+	<td>A list of usernames for users you want to unfollow</td>
+</tr>
+<tr>
+	<td><code>output.log</code></td>
+	<td>A list of messages (strings) you want to log.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<p>
+<strong>Example:</strong>
+<pre>
+output = {
+	"data": {
+		"count":3,
+		"list":["a","b","c"]
+	},
+	"posts": [
+		{"content":"Hello world!"}
+	],
+	"comments": [
+		{"content":"Say what?!", "post_id":230}
+	],
+	"follow": ["adam", "eve"],
+	"unfollow": ["snake"],
+	"log": [
+		"Note to self: Buy milk at the store."
+	]
+}
+</pre>
+</p>
+</div>
+
+</section>
+
+
+
+data
+
+output
+
+
+output.data
+output.posts
+output.comments
+output.follow
+output.unfollow
+output.log
+
+<section id="examples" class="section">
+<h2>Examples</h2>
+</section>
+
+
+
+
+</div>
+</div>
+{% load staticfiles %}
+<script src = "{% static 'socialnetwork/js/docs.js' %}"></script>
+{% endblock %}

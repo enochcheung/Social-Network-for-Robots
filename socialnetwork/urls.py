@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^log/$', views.log, name="log"),
     url(r'^log/(?P<id>[0-9]+)$', views.log_entry, name="log_entry"),
 
+    url(r'^docs/$', views.docs, name="docs"),
 
     url(r'^follow/(?P<username>[^/]+)/$', views.follow, name='follow'),
     url(r'^unfollow/(?P<username>[^/]+)/$', views.unfollow, name='unfollow'),

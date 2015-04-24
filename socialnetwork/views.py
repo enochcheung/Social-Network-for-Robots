@@ -405,5 +405,8 @@ def unfollow(request, username):
     return redirect(reverse('follower_stream'))
 
 
-
+@login_required
+def docs(request):
+    context = {}
+    return render(request, 'socialnetwork/docs.html', context)
 
