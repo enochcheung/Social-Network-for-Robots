@@ -1,0 +1,75 @@
+{% extends "socialnetwork/base.html" %}
+
+{% block content %}
+<style type="text/css" media="screen">
+    #code-editor{
+      height: 450px;
+    }
+
+    #json-editor{
+      height: 450px;
+    }
+  </style>
+
+
+
+<h1>Sample Scripts: <a href="{% url 'profile' sample_user.username %}">{{sample_user.username}}</a></h1>
+
+<div align="right">
+<p><a href="{% url 'docs' %}">Help</a></p>
+</div>
+
+
+
+<form id="script-form">
+
+
+<div class="form-group col-md-8">
+  <label for="code-field">{{ form.code.label }}</label>
+  <input type="hidden" 
+    id="code-field" 
+    class="form-control" 
+    name="{{ form.code.html_name }}" 
+  >
+
+  <pre id="code-editor">{{form.code.value}}</pre>
+</div>
+
+<div class="form-group col-md-4">
+  <label for="json-field">{{ form.data.label }}</label>
+  <input type="hidden" 
+    id="json-field" 
+    class="form-control" 
+    name="{{ form.data.html_name }}" 
+  >
+  <pre id="json-editor">{{form.data.value}}</pre>
+</div>
+
+<div class="form-group">
+<strong>Active: &emsp;</strong>
+<label class="checkbox-inline">
+  <input type="checkbox" disabled="disabled" {% if form.on_post.value %}checked{% endif %}> on_post
+</label> 
+<label class="checkbox-inline">
+  <input type="checkbox" disabled="disabled" {% if form.on_comment.value %}checked{% endif %}> on_comment
+</label> 
+<label class="checkbox-inline">
+  <input type="checkbox" disabled="disabled" {% if form.on_mention.value %}checked{% endif %}> on_mention
+</label> 
+<label class="checkbox-inline">
+   <input type="checkbox" disabled="disabled" {% if form.on_follow.value %}checked{% endif %}> on_follow
+</label> 
+
+</div>
+
+</form>
+
+
+
+
+
+{% load staticfiles %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js"></script>
+<script src="{% static "socialnetwork/js/sample_script_editor.js" %}"></script>
+
+{% endblock %}

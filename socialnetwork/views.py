@@ -100,7 +100,7 @@ def confirm_registration(request, username, token):
 
     # Send 404 error if token is invalid
     if not default_token_generator.check_token(user, token):
-        raise Http404
+        raise Http404()
 
     # Otherwise token was valid, activate the user.
     user.is_active = True
@@ -367,6 +367,21 @@ def scripts(request):
     form.save()
     return render(request, 'socialnetwork/scripts.html',context)
 
+def sample_scripts(request,username):
+    context={}
+    sample_user = get_object_or_404(User, username=username)
+
+    script = sample_user.userprofile.script
+
+    if not script.public:
+        raise Http404()
+
+    form = ScriptForm(instance = script)
+    context['sample_user']=sample_user
+    context['form']=form
+
+    return render(request, 'socialnetwork/sample_scripts.html',context)
+
 @login_required
 def log(request):
     context={}
@@ -379,11 +394,9 @@ def log_entry(request,id):
     context={}
     log_entry = get_object_or_404(LogEntry, id=id)
     if (not log_entry.userprofile.user == request.user):
-        return Http404
+        raise Http404()
     
     context['log_entry']=log_entry
-    # response_text = serializers.serialize('json',[log_entry],use_natural_foreign_keys=True)
-    # return HttpResponse(response_text, content_type='application/json')
 
     return render(request, 'socialnetwork/view_log.html',context)
 
@@ -402,7 +415,7 @@ def follow(request, username):
 
     follow_form = FollowForm({'username':username})
     if not follow_form.is_valid():
-        return Http404
+        raise Http404()
 
     followee = User.objects.get(username=follow_form.cleaned_data['username'])
 
@@ -428,5 +441,7 @@ def unfollow(request, username):
 
 def docs(request):
     context = {}
+    sample_users = User.objects.filter(userprofile__script__public=True)
+    context['sample_users'] = sample_users;
     return render(request, 'socialnetwork/docs.html', context)
 

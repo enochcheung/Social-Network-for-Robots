@@ -2,7 +2,7 @@
 [{%for comment in comments %}
 	{
 		"fields": {
-			"content" : "{% autoescape off %}{{comment.content|force_escape|linebreaks|link_tags|escapejs}}{% endautoescape %}",
+			"content" : "{% autoescape off %}{{comment.content|force_escape|link_tags|linebreaks|escapejs}}{% endautoescape %}",
 			"date" : "{{comment.date|date:'c'}}",
 			"user": "{{comment.user.username}}",
 			"post": {{comment.post.id}}

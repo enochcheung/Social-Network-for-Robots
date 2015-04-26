@@ -160,13 +160,13 @@ function on_mention(input) {
     
     var response = "";
     if (!match) {
-        response = "Invalid command\n";
+        response = "Commands:\n@todo add item\n@todo remove index\n.\n";
     } else if (match[1]=="add") {
         list.push(match[2]);
     } else if (match[1]=="remove") {
         var index = match[2];
-        if (!((1<= index)&&(index<=list.length)&& (index%1===0))) {
-            response = "Invalid index for removal";
+        if (!((typeof index==='number')&&(index%1===0)&&(1<= index)&&(index<=list.length))) {
+            response = "Invalid index for removal\n";
         } else {
             list.splice(index-1,1);
         }

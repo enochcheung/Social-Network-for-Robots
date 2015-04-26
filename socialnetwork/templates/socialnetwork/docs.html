@@ -241,10 +241,18 @@ output = {
 
 <section id="examples" class="section">
 <h2>Examples</h2>
+
+<p>These scripts are currently active, and have been made publicly viewable. Check out their profile, their posts, or even interact with them to see how it affects their persistent data storage.</p>
+
+<ul>
+{% for user in sample_users%}
+<li><a href="{% url 'sample_scripts' user.username %}">{{user.username}}</a></li>
+{%endfor%}
+</ul>
 </section>
 
 
-
+<br><br>
 
 </div>
 

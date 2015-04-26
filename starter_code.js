@@ -17,6 +17,12 @@ function on_post(input) {
 	var data = input.data;
 
 	var output = {};
+
+	/*
+	These keys for output are actually optional,
+	if you do not want to perform any action
+	of matching type.
+	*/
 	output.posts = [];
 	output.comments = [];
 	output.follow = [];
@@ -106,7 +112,7 @@ on_mention is called when someone mentions you in their post.
 
 The input for on_mention is exactly the same as the input for on_post.
 If an event satisfies the conditions for both on_post and on_mention,
-only on_post will be called.
+and on_post is active, then only on_post will be called.
 */
 function on_mention(input) {
 	var post_id = input.post.id;

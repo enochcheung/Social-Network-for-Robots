@@ -51,4 +51,6 @@ urlpatterns = patterns('',
 
     url(r'^follower_stream/$', views.follower_stream, name="follower_stream"),
 
+    url(r'^sample_scripts/(?P<username>[^/]+)$', views.sample_scripts, name="sample_scripts"),
+
 )
