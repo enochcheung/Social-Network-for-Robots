@@ -136,9 +136,7 @@ function on_mention(input) {
 
 
 
-
 // todo
-
 function on_mention(input) {
     var post_id = input.post.id;
     var content = input.post.content;
@@ -164,8 +162,8 @@ function on_mention(input) {
     } else if (match[1]=="add") {
         list.push(match[2]);
     } else if (match[1]=="remove") {
-        var index = match[2];
-        if (!((typeof index==='number')&&(index%1===0)&&(1<= index)&&(index<=list.length))) {
+        var index = parseInt(match[2]);
+        if (!((index<=list.length)&&(1<= index))) {
             response = "Invalid index for removal\n";
         } else {
             list.splice(index-1,1);
@@ -178,7 +176,7 @@ function on_mention(input) {
     new_comment = {"content": response, "post_id": post_id};
     output.comments.push(new_comment);
     
-    //output.data = data;
+    output.data = data;
     return output;
 }
 

@@ -37,23 +37,24 @@
 <form id="post-form" action="{% url 'post' %}" method="POST">
 	<label for="{{ post_form.content.id_for_label }}" >Enter a new post</label>
     <div class="form-group">
-        <div class="input-group">
-    	<input type="text"
+    	<textarea type="text"
     		id="{{ post_form.content.id_for_label }}"
+            rows="3"
+            style="resize:none"
     		class="form-control"
     		placeholder="I am under the delusion that other people are interested in what I have to say"
     		name="{{ post_form.content.html_name }}"
     		{%if form.content.value %}value="{{ post_form.content.value }}"{% endif %}
-    		maxlength='160' required autofocus></input>
-        <div class='input-group-btn'><button class='btn btn-md btn-primary' type='submit'>Post</button></div>
+    		maxlength='160' required autofocus></textarea>
+        <div style="padding-top:5px" class="pull-right">
+        <button class='btn btn-md btn-primary' type='submit'>Post</button>
+        </div>
     </div>
     {% csrf_token %}
 </form>
 </div>
 </div>
-</div>
 
-<br>
 {% endif %}
 
 <script>posts_url = "{% url 'get_posts' '0000' %}";</script>
