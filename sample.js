@@ -132,3 +132,56 @@ function on_mention(input) {
 {
   "watching":{}
 }
+
+
+
+
+
+// todo
+
+function on_mention(input) {
+    var post_id = input.post.id;
+    var content = input.post.content;
+    var poster = input.post.user;
+
+    var data = input.data;
+
+    var output = {};
+    output.comments = [];
+
+    var lists = data.lists;
+    if (!lists.hasOwnProperty(poster)) {
+        lists[poster] = [];
+    }
+    var list = lists[poster];
+    
+    var regex = /^@todo (\w+) (.*)/;
+    var match = regex.exec(content);
+    
+    var response = "";
+    if (!match) {
+        response = "Invalid command\n";
+    } else if (match[1]=="add") {
+        list.push(match[2]);
+    } else if (match[1]=="remove") {
+        var index = match[2];
+        if (!((1<= index)&&(index<=list.length)&& (index%1===0))) {
+            response = "Invalid index for removal";
+        } else {
+            list.splice(index-1,1);
+        }
+    }
+    
+    for (i=0;i<list.length;i++) {
+        response += String(i+1)+". "+list[i]+"\n";
+    }
+    new_comment = {"content": response, "post_id": post_id};
+    output.comments.push(new_comment);
+    
+    //output.data = data;
+    return output;
+}
+
+{
+  "lists":{}
+}

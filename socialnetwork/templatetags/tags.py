@@ -13,8 +13,8 @@ register = template.Library()
 @register.filter
 @stringfilter
 def link_tags(value):
-	value = re.sub(r'@(\w+)', profile_link, value)
-	value = re.sub(r'#(\w+)', tag_link, value)
+	value = re.sub(r'(?:^|(?<=\s))@(\w+)', profile_link, value)
+	value = re.sub(r'(?:^|(?<=\s))#(\w+)', tag_link, value)
 
 	return value
 

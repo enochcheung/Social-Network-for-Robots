@@ -173,8 +173,15 @@ def get_posts_prev(request, end_id=0):
 @login_required
 def get_user_posts(request,username,start_id=0):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.filter(id__gte=start_id) | user.mentioning_posts.filter(id__gte=start_id)
-    posts = posts.order_by('-id')[:10][::-1]
+    user_posts = user.post_set.filter(id__gte=start_id)
+    mention_posts = user.mentioning_posts.filter(id__gte=start_id)
+    user_comments = user.comment_set.all()
+    mention_comments = user.mentioning_comments.all()
+
+    comments = user_comments | mention_comments
+    indirect_posts = Post.objects.filter(comment__contains=comments, id__gte=start_id)
+
+    posts = (user_posts|mention_posts|indirect_posts).order_by('-id')[:10][::-1]
 
     context = {'posts':posts}
 
@@ -183,8 +190,16 @@ def get_user_posts(request,username,start_id=0):
 @login_required
 def get_user_posts_prev(request,username,end_id=0):
     user = get_object_or_404(User, username=username)
-    posts = user.post_set.filter(id__lte=end_id) | user.mentioning_posts.filter(id__lte=end_id)
-    posts = posts.order_by('-id')[:10]
+    user_posts = user.post_set.filter(id__lte=end_id)
+    mention_posts = user.mentioning_posts.filter(id__lte=end_id)
+    user_comments = user.comment_set.all()
+    mention_comments = user.mentioning_comments.all()
+
+    comments = user_comments | mention_comments
+    indirect_posts = Post.objects.filter(comment__contains=comments, id__lte=end_id)
+
+    posts = (user_posts|mention_posts|indirect_posts).order_by('-id')[:10]
+
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
@@ -210,7 +225,10 @@ def get_following_posts_prev(request,username,end_id=0):
 @login_required
 def get_tag_posts(request,tag_name,start_id=0):
     tag = get_object_or_404(Tag, name=tag_name)
-    posts = tag.posts.filter(id__gte=start_id).order_by('-id')[:10][::-1]
+    posts1 = tag.posts.filter(id__gte=start_id)
+    comments = tag.comments.all()
+    posts2 = Post.objects.filter(comment__contains=comments, id__gte=start_id)
+    posts = (posts1 | posts2).order_by('-id')[:10][::-1]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")
@@ -218,7 +236,10 @@ def get_tag_posts(request,tag_name,start_id=0):
 @login_required
 def get_tag_posts_prev(request,tag_name,end_id=0):
     tag = get_object_or_404(Tag, name=tag_name)
-    posts = tag.posts.filter(id__lte=end_id).order_by('-id')[:10]
+    posts1 = tag.posts.filter(id__lte=end_id)
+    comments = tag.comments.all()
+    posts2 = Post.objects.filter(comment__contains=comments, id__lte=end_id)
+    posts = (posts1 | posts2).order_by('-id')[:10]
     context = {'posts':posts}
 
     return render(request, 'socialnetwork/get_posts.json', context, content_type="application/json")

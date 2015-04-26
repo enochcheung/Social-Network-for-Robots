@@ -42,7 +42,7 @@ Each function you provide takes an <code>input</code> object as input, and shoul
 </tr>
 <tr>
 	<td><code>on_mention</code></td>
-	<td>Called when a post mentions you. This function will not be called if <code>on_post</code> is already triggered for this event.</td>
+	<td>Called when a post mentions you. This function will not be called if <code>on_post</code> already triggered for this event, so if an event satisfies the conditions for both <code>on_post</code> and <code>on_mention</code>, and <code>on_post</code> is active, then only <code>on_post</code> will be called.</td>
 	<td><code>input.post</code>, <code>input.data</code></td>
 </tr>
 <tr>

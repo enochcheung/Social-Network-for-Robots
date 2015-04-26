@@ -1,7 +1,8 @@
+{% load tags %}
 [{%for comment in comments %}
 	{
 		"fields": {
-			"content" : "{{comment.content|force_escape|escapejs}}",
+			"content" : "{% autoescape off %}{{comment.content|force_escape|linebreaks|link_tags|escapejs}}{% endautoescape %}",
 			"date" : "{{comment.date|date:'c'}}",
 			"user": "{{comment.user.username}}",
 			"post": {{comment.post.id}}
