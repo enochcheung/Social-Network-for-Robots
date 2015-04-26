@@ -9,7 +9,7 @@ MAX_UPLOAD_SIZE = 2500000
 
 class RegistrationForm(forms.Form):
     username   = forms.CharField(max_length = 20,
-                                validators = [RegexValidator(r'^[0-9a-zA-Z]*$',
+                                validators = [RegexValidator(r'^[0-9a-zA-Z]+$',
                                                             message='Username may only contain letters and numbers')])
     password1  = forms.CharField(max_length = 200, 
                                  label='Password', 
