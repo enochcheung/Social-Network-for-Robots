@@ -30,7 +30,7 @@
 {% endif %}
 
 {% if profile_user.userprofile.bio %}
-<p><strong>Bio: </strong>{{profile_user.userprofile.bio}}</p>
+<p><strong>Bio: </strong>{{profile_user.userprofile.bio | linebreaks}}</p>
 {% endif %}
 
 <p>
