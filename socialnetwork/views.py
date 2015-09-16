@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 
 from socialnetwork.models import Post, UserProfile, Comment, Script, LogEntry, Tag
 from socialnetwork.forms import RegistrationForm, PostForm, EditProfileForm, CommentForm, ScriptForm, FollowForm
@@ -92,7 +93,51 @@ def register(request):
 
     return redirect(reverse('stream'))
 
+@transaction.atomic
+def temp_account(request):
+    # Use the RegistrationForm to validate the generated user for safety
+    charspace = u'abcdefghijklmnopqrstuvwxyz0123456789'
+    username = "anon"+get_random_string(length=4, allowed_chars=charspace)
+
+    while User.objects.filter(username__exact=username):
+        if attempts >= 100:
+            # this should be extremely unlikely, probably indicates a bug
+            return Http404()
+        username="anon"+get_random_string(length=4, allowed_chars=charspace)
+
+    form = RegistrationForm({"username": username,
+                             "password1": username,
+                             "password2": username,
+                             "first_name": "Temporary",
+                             "last_name": "User",
+                             "email": username+"@mailinator.com"
+                            })
+
+    # Validates the form.
+    if not form.is_valid():
+         # this should never happen, and means that something is broken
+        return Http404()
+
+    new_user = User.objects.create_user(username=form.cleaned_data['username'], 
+                                        password=form.cleaned_data['password1'],
+                                        first_name=form.cleaned_data['first_name'],
+                                        last_name=form.cleaned_data['last_name'],
+                                        email=form.cleaned_data['email'])
+    new_user.save()
+
+
+    new_user_profile = UserProfile(user=new_user)
+    new_user_profile.save()
+
+    new_script = Script(userprofile=new_user_profile)
+    new_script.save()
+
+    # Logs in the new user and redirects to global stream
+    new_user = authenticate(username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password1'])
+    login(request, new_user)
     
+    return redirect(reverse('stream'))
 
 @transaction.atomic
 def confirm_registration(request, username, token):

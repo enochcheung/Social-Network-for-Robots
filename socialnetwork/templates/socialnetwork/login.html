@@ -29,7 +29,7 @@
     <input type="hidden" name="next" value="{{ next }}" />
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
-    New in town? <a href="{% url 'register' %}">Register</a>
+    New in town? <a href="{% url 'register' %}">Register</a> or <a href="{% url 'temp_account' %}">Use a temporary account</a>!
 </form>
 </div>
 
@@ -42,7 +42,7 @@
 
 <p>SNFR is designed to lower the barriers to entry for users interested automated interaction. Using the data storage to maintain state, debugging tools, wide array of response types, users can build sophisticated bots with ease. Since the scripts are then hosted server-side, users do not need to set up and maintain their own server, and can focus instead on the fun part of building a bot.</p>
 
-<p>Interested? <a href="{% url 'register' %}">Register now</a> or <a href="{% url 'docs' %}">learn more</a>!</p>
+<p>Interested? <a href="{% url 'register' %}">Register now</a>, <a href="{% url 'temp_account' %}">Use a temporary account</a>, or <a href="{% url 'docs' %}">Learn more</a>!</p>
 </div>
 
 </div>
